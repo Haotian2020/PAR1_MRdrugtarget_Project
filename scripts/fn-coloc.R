@@ -1,0 +1,17 @@
+coloc.analysis.quant <- function(beta1,beta2,se1,se2,MAF1,MAF2,N1,N2, SNP){
+  
+  #Convert the inputs in order to run in coloc function.
+  #type, quant (quantitative) for pQTL study 
+  dataset1 <- list(beta=beta1, varbeta=se1^2, MAF=MAF1,type="quant", N=N1, snp=SNP)
+  
+  #type, quant (quantitative) for quantitative trait study 
+  dataset2 <- list(beta=beta2, varbeta=se2^2,MAF=MAF2, type="quant",N=N2, snp=SNP)
+  
+  
+  #Run the coloc analysis, setting the prior probabilities for association with each trait (p1, p2) and both traits together (p12) as 1E-5.
+  #p1 prior probability a SNP is associated with trait 1, default 1e-4
+  #p2 prior probability a SNP is associated with trait 2, default 1e-4
+  #p12 prior probability a SNP is associated with both traits, default 1e-5
+  result <- coloc.abf(dataset1, dataset2, p1=1e-4, p2=1e-4, p12=1e-5)  
+  return(result)
+}
