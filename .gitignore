@@ -1,7 +1,7 @@
 # private files
-script/specify_paths.R
-script/bin/
-result
+scripts/specify_paths.R
+scripts/bin/
+results
 figures
 
 # History files
