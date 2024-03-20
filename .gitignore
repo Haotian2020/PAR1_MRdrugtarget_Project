@@ -1,3 +1,9 @@
+# private files
+script/specify_paths.R
+script/bin/
+result
+figures
+
 # History files
 .Rhistory
 .Rapp.history
@@ -5,6 +11,7 @@
 # Session Data files
 .RData
 .RDataTmp
+.DS_Store
 
 # User-specific files
 .Ruserdata
