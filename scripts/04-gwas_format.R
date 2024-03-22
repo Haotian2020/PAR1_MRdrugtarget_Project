@@ -36,6 +36,7 @@ data.table::fwrite(dvt_gwas_format, paste0(rdsf_personal,"./data/format_data/dvt
 # format gwas data from meta-analysis of NS UKB and FinnGen R10-----------------
 
 ns_meta = fread(paste0(rdsf_personal,"data/meta_ns.txt")) %>% data.frame()
+
 # calculate lambuda
 p_value=ns_meta$`P-value`
 z = qnorm(p_value/ 2)
@@ -43,6 +44,7 @@ round(median(z^2, na.rm = TRUE) / 0.454, 3)
 # 0.989
 colnames(ns_meta)[colnames(ns_meta) == "P-value"] <- "pval"
 
+# check how many SNPs are common
 summary(ns_meta$MarkerName%in%ns_ukb$SNP)
 #     Mode    FALSE     TRUE 
 # logical  8032040 10920780 
@@ -63,7 +65,6 @@ ns_meta_format = TwoSampleMR::format_data(
   pval_col = "pval") %>% mutate(outcome = "Nephrotic syndrome UKB+FinnGen R10")
 
 data.table::fwrite(ns_meta_format, paste0(rdsf_personal,"./data/format_data/ns_meta_GWAS_tidy_outcome.csv"))
-
 
 # format gwas data from CKDGen -------------------------------------------------
 
@@ -182,3 +183,38 @@ ma_gwas_format$outcome = "Microalbuminuria"
 ma_gwas_format$ncase.outcome = 51861
 ma_gwas_format$ncontrol.outcome = 297093
 data.table::fwrite(ma_gwas_format, paste0(rdsf_personal,"./data/format_data/ma_GWAS_tidy_outcome.csv"))
+
+# f2r gwas from ukb-ppp --------------------------------------------------------
+
+f2r_gwas = data.frame()
+for(i in 1:22){
+  print(i)
+  f2r_chr = vroom(paste0(rdsf_shared,"data/UKB-PPP/F2R_P25116_OID20691_v1_Inflammation/discovery_chr",i,"_F2R:P25116:OID20691:v1:Inflammation.gz"))
+  match_chr = vroom(paste0(rdsf_shared,"data/UKB-PPP/snp-rsid-maps/olink_rsid_map_mac5_info03_b0_7_chr",i,"_patched_v2.tsv.gz"))
+  f2r_chr_rsid = merge(f2r_chr,match_chr)
+  f2r_gwas = rbind(f2r_gwas,f2r_chr_rsid)
+}
+
+f2r_gwas$p = 10^(-f2r_gwas$LOG10P)
+
+f2r_gwas_format = format_data(
+  f2r_gwas,
+  type = "outcome",
+  header = TRUE,
+  snp_col = "rsid",
+  beta_col = "BETA",
+  se_col = "SE",
+  eaf_col = "A1FREQ",
+  effect_allele_col = "ALLELE1",
+  other_allele_col = "ALLELE0",
+  pval_col = "p",
+  samplesize_col = "N",
+  min_pval = 1e-1000,
+  chr_col = "CHROM",
+  pos_col = "POS38",
+  log_pval = TRUE
+)
+
+f2r_gwas_format$outcome = "F2R whole ukb"
+
+data.table::fwrite(f2r_gwas_format, paste0(rdsf_personal,"./data/format_data/f2r_GWAS_tidy_outcome.csv"))
