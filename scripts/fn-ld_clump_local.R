@@ -1,9 +1,9 @@
-# doing LD clump in local
+# doing LD clump locally -------------------------------------------------------
 
 ld_clump_local =  function(out_dat,
                            threshold = 5e-8,
                            r2 = 0.001,
-                           ignore_sampleszie = T) {
+                           ignore_samplesize = F) {
   if ("pval.outcome" %in% colnames(out_dat)) {
     tmp = subset(out_dat, pval.outcome < threshold) %>% TwoSampleMR::convert_outcome_to_exposure()
   } else
@@ -22,7 +22,7 @@ ld_clump_local =  function(out_dat,
   )
   
   ins = subset(tmp, SNP %in% snps$rsid)
-  if (ignore_sampleszie == F) {
+  if (ignore_samplesize == F) {
     ss = subset(out_dat, SNP %in% snps$rsid) %>%  dplyr::select(c(
       "SNP",
       starts_with("chr"),
