@@ -11,13 +11,18 @@
 source("fn-ld_clump_local")
 
 # gtex blood dataset -----------------------------------------------------------
-# 38build
+# 38 build
 
 f2r_gtexbld_gwas = fread(paste0(rdsf_personal,"data/GTEx_Analysis_v8_eQTL/Whole_Blood.v8.signif_variant_gene_pairs.txt.gz"))
 f2r_gtexbld_gwas = f2r_gtexbld_gwas[grepl("ENSG00000181104", f2r_gtexbld_gwas$gene_id), ]
 f2r_gtexbld_gwas = subset(f2r_gtexbld_gwas,pval_nominal<=5e-8)
+
+# manually add SNP -------------------------------------------------------------
+
 f2r_gtexbld_gwas$SNP = c("rs250737","rs250735","rs250734","rs250753")
-# check with reference panel that each alt is the minor allele
+
+# check with reference panel that each alt is the minor allele -----------------
+
 split_cols <- strsplit(f2r_gtexbld_gwas$variant_id, "_")
 split_df <- as.data.frame(do.call(rbind, split_cols))
 colnames(split_df) <- c("chr", "pos", "ref","alt","build")
@@ -49,8 +54,7 @@ f2r_gtex_str_exp = f2r_gtexbld_gwas_format %>%
 write.table(f2r_gtex_str_exp, file = paste0(rdsf_personal,"data/par1/f2r_gtex_str_exp.csv"),
             sep= ',', row.names = F,col.names= T)
 
-# cross-tissue gtex analyses ---------------------------------------------------
-# file is in data/GTEx_Analysis_v8_eQTL
+# cross-tissue gtex instruments ------------------------------------------------
 
 drug_targets<- NULL
 drug_targets$gene_id = "ENSG00000181104"
@@ -110,11 +114,30 @@ tmp_input_exp_sig <- cbind(tmp_input_exp_sig, split_df)
 tmp_input_exp_sig_keep = subset(tmp_input_exp_sig,nchar(tmp_input_exp_sig$ref)==1 & 
                                   nchar(tmp_input_exp_sig$alt)==1)
 
+# format dataset ---------------------------------------------------------------
+
 colnames(tmp_input_exp_sig_keep)[colnames(tmp_input_exp_sig_keep) == "slope"] <- "beta"
 colnames(tmp_input_exp_sig_keep)[colnames(tmp_input_exp_sig_keep) == "slope_se"] <- "se"
 tmp_input_exp_sig_keep$pos = as.numeric(tmp_input_exp_sig_keep$pos)
 tmp_input_exp_sig_keep$chr = 5
 tmp_input_exp_sig_keep$chr_pos = paste0(tmp_input_exp_sig_keep$chr,":",tmp_input_exp_sig_keep$pos)
+
+# use SNPnexus -----------------------------------------------------------------
+
+snpnexus_input = tmp_input_exp_sig_keep[,c("chr","pos","pos","ref","alt")]
+colnames(snpnexus_input) = c("Chromosome","Start","End","ref","alt")
+snpnexus_input <- snpnexus_input[rep(row.names(snpnexus_input), each = 2), ]
+
+snpnexus_input$strand <- 1
+snpnexus_input$strand[seq(2, nrow(snpnexus_input), by = 2)] <- -1
+rownames(snpnexus_input) <- NULL
+snpnexus_input$type = "Chromosome"
+snpnexus_input = snpnexus_input[,c("type","Chromosome","Start","End","ref","alt","strand")]
+
+write.table(snpnexus_input, file = paste0(rdsf_personal,"data/par1/crosstissue_snpnexus.txt"),
+            sep= '\t', row.names = F, col.names= T, quote = F)
+
+
 
 # using esemble database -------------------------------------------------------
 
@@ -292,6 +315,7 @@ write.table(final_merge_group$refsnp_id, file = paste0(rdsf_personal,"data/par1/
             sep= ' ', row.names = F,col.names= F,quote = F)
 
 # use ensembl VEP to get Eur AF ------------------------------------------------
+
 cross_tissue_rsid_maf = fread(paste0(rdsf_personal,"data/par1/crosstissue_rsid_eurmaf.txt"))
 cross_tissue_rsid_maf = cross_tissue_rsid_maf[,c("#Uploaded_variation","Allele","EUR_AF")]
 colnames(cross_tissue_rsid_maf) = c("refsnp_id","Allele","EUR_AF")
