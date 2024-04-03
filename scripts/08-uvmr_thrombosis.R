@@ -19,7 +19,12 @@ gtex_pos_mr = uvmr(exp_name = "F2R Gtex str",out_name = thromb_outcomes)
 ukb_eqtl_pos_mr_ld = rbind(uvmr_cor(exp_name = "F2R ukb wk", out_name = thromb_outcomes),
                        uvmr_cor(exp_name = "F2R eqtl wk", out_name = thromb_outcomes) )
 
+kidney_pos_mr = rbind(uvmr_cor(exp_name = "F2R kidney meta str",out_name = thromb_outcomes),
+                      uvmr_cor(exp_name = "F2R tubule meta str",out_name = thromb_outcomes) )
 
+gtex_pos_mr = uvmr_cor(exp_name = "F2R Gtex str",out_name = thromb_outcomes)
+
+# write results ----------------------------------------------------------------
 
 data.table::fwrite(rbind(ukb_eqtl_pos_mr%>%filter(method %in% c("Inverse variance weighted","Wald ratio"))%>%generate_odds_ratios,
                          gtex_pos_mr%>%filter(method %in% c("Inverse variance weighted","Wald ratio"))%>%generate_odds_ratios), 

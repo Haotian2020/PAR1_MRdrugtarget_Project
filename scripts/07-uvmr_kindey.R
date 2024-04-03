@@ -21,6 +21,16 @@ gtex_mr = uvmr(exp_name = "F2R Gtex str",out_name = kidney_outcomes)
 ukb_eqtl_mr_ld = rbind(uvmr_cor(exp_name = "F2R ukb wk", out_name = kidney_outcomes),
                        uvmr_cor(exp_name = "F2R eqtl wk", out_name = kidney_outcomes) )
 
+ukb_eqtl_mr = rbind(uvmr_cor(exp_name = "F2R ukb str", out_name = kidney_outcomes),
+                    uvmr_cor(exp_name = "F2R eqtl str", out_name = kidney_outcomes) )
+
+kidney_mr = rbind(uvmr_cor(exp_name = "F2R kidney meta str",out_name = kidney_outcomes),
+                  uvmr_cor(exp_name = "F2R tubule meta str",out_name = kidney_outcomes) )
+
+gtex_mr = uvmr_cor(exp_name = "F2R Gtex str",out_name = kidney_outcomes)
+
+# write results ----------------------------------------------------------------
+
 data.table::fwrite(rbind(ukb_eqtl_mr%>%filter(method %in% c("Inverse variance weighted","Wald ratio"))%>%generate_odds_ratios,
                          gtex_mr%>%filter(method %in% c("Inverse variance weighted","Wald ratio"))%>%generate_odds_ratios), 
                    paste0(rdsf_personal,"./results/par1_kidney_abstract.csv"))
