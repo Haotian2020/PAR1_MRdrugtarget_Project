@@ -122,44 +122,30 @@ tmp_input_exp_sig_keep$pos = as.numeric(tmp_input_exp_sig_keep$pos)
 tmp_input_exp_sig_keep$chr = 5
 tmp_input_exp_sig_keep$chr_pos = paste0(tmp_input_exp_sig_keep$chr,":",tmp_input_exp_sig_keep$pos)
 
-# use SNPnexus -----------------------------------------------------------------
-
-snpnexus_input = tmp_input_exp_sig_keep[,c("chr","pos","pos","ref","alt")]
-colnames(snpnexus_input) = c("Chromosome","Start","End","ref","alt")
-snpnexus_input <- snpnexus_input[rep(row.names(snpnexus_input), each = 2), ]
-
-snpnexus_input$strand <- 1
-snpnexus_input$strand[seq(2, nrow(snpnexus_input), by = 2)] <- -1
-rownames(snpnexus_input) <- NULL
-snpnexus_input$type = "Chromosome"
-snpnexus_input = snpnexus_input[,c("type","Chromosome","Start","End","ref","alt","strand")]
-
-write.table(snpnexus_input, file = paste0(rdsf_personal,"data/par1/crosstissue_snpnexus.txt"),
-            sep= '\t', row.names = F, col.names= T, quote = F)
-
-
+tmp_unique_pos = tmp_input_exp_sig_keep[!duplicated(tmp_input_exp_sig_keep$pos),]
 
 # using esemble database -------------------------------------------------------
 
-snp = useEnsembl(biomart="snp")
 grch38 = useEnsembl(biomart="snp",dataset = "hsapiens_snp")
 x = listDatasets(grch38)
 y = listAttributes(grch38)
 z = listFilters(grch38)
-attributes = c("refsnp_id","chr_name","chrom_start","chrom_end","allele","minor_allele","minor_allele_freq")
+attributes = c("refsnp_id","chr_name","chrom_start","chrom_end","allele")
 filters = c("chr_name","start","end")
 
-# request maf from esemble -----------------------------------------------------
-maf_store <- NULL
+# request rsid from ensembl ----------------------------------------------------
+# MAF from ensembl is global MAF, we need MAF for EUR --------------------------
 
-for (i in 1:length(tmp_input_exp_sig_keep$chr)) {
+rsid_store <- NULL
+
+for (i in 1:length(tmp_unique_pos$chr)) {
   success <- FALSE
   while (!success) {
-    finding_list <- lapply(tmp_input_exp_sig_keep[i, c("chr", "pos", "pos")], as.numeric)
+    finding_list <- lapply(tmp_unique_pos[i, c("chr", "pos", "pos")], as.numeric)
     print(i)
     print(finding_list)
     # Attempt to get data from the server
-    rsid_maf <- tryCatch(
+    rsid <- tryCatch(
       expr = {
         getBM(attributes = attributes,
               filters = filters,
@@ -176,50 +162,59 @@ for (i in 1:length(tmp_input_exp_sig_keep$chr)) {
       }
     )
     
-    print(rsid_maf)
+    print(rsid)
     
-    # Check if rsid_maf is not NULL
-    if (!is.null(rsid_maf) && !identical(rsid_maf, data.frame())) {
-      print("find maf is not NULL")
-      maf_store <- rbind(maf_store, rsid_maf)
+    # Check if rsid is not NULL
+    
+    if (!is.null(rsid) && !identical(rsid, data.frame())) {
+
+      rsid_store <- rbind(rsid_store, rsid)
       success <- TRUE  # Set success flag to exit the while loop
-      rsid_maf <- NULL
+      rsid <- NULL
     }
   }
 }
 
 # QC step ----------------------------------------------------------------------
-maf_store_qc1 = subset(maf_store,chrom_start == chrom_end)
-maf_store_qc1$pos = maf_store_qc1$chrom_start
-maf_store_qc1 = maf_store_qc1[,c("refsnp_id","chr_name","pos","allele","minor_allele","minor_allele_freq")]
-maf_store_qc1 = subset(maf_store_qc1,!is.na(minor_allele)&!is.na(minor_allele_freq))
-# 1459
+rsid_store_qc1 = subset(rsid_store,chrom_start == chrom_end)
+rsid_store_qc1$pos = rsid_store_qc1$chrom_start
+rsid_store_qc1 = rsid_store_qc1[,c("refsnp_id","chr_name","pos","allele")]
+rsid_store_qc1 = subset(rsid_store_qc1,!is.na(allele))
 
-unique_refsnp_rows <- maf_store_qc1[!duplicated(maf_store_qc1$refsnp_id), ]
-unique_refsnp_rows$minor_allele[unique_refsnp_rows$minor_allele == TRUE] <- "T"
+unique_refsnp_rows <- rsid_store_qc1[!duplicated(rsid_store_qc1$refsnp_id), ]
 
-# merge tmp_input_exp_sig_keep with maf_store_qc1 by pos colume ----------------
-merge_dat = left_join(x = tmp_input_exp_sig_keep,unique_refsnp_rows,by = "pos")
+merge_dat = left_join(x = tmp_unique_pos,unique_refsnp_rows,by = "pos")
 nrow(merge_dat)
-# 1490
-table(is.na(merge_dat$refsnp_id))
-# 31
-table(is.na(merge_dat$minor_allele_freq))
-# 31
 
-# check if maf = eaf -----------------------------------------------------------
+res = left_join(x = tmp_input_exp_sig_keep,unique_refsnp_rows,by = "pos")
 
-table(merge_dat$alt == merge_dat$minor_allele)
-# FALSE  TRUE
-# 699   760
-merge_dat$eaf = ifelse(merge_dat$alt == merge_dat$minor_allele,merge_dat$maf,1-merge_dat$maf)
-merge_dat_keep = subset(merge_dat,!is.na(refsnp_id))
-merge_dat_miss = subset(merge_dat,is.na(refsnp_id))
-# check merge_dat_miss one by one
-merge_dat_miss$pos
-# duplicated 
+# use SNPnexus -----------------------------------------------------------------
 
-snps = merge_dat_miss[,c("chr","pos")]
+snpnexus_input = data.frame(merge_dat$refsnp_id)
+snpnexus_input$type = "dbsnp"
+
+snpnexus_input <- snpnexus_input[,c("type","merge_dat.refsnp_id")]
+
+write.table(snpnexus_input, file = paste0(rdsf_personal,"data/par1/crosstissue_snpnexus.txt"),
+            sep= '\t', row.names = F, col.names= F, quote = F)
+
+# load maf from SNPnexus -------------------------------------------------------
+
+maf = fread(paste0(paste0(rdsf_personal,"data/par1/crosstissue_maf.txt")))
+
+maf = maf[,c("dbSNP","Chromosome","Position","Minor Allele","EUR Frequency")]
+
+# merge data -------------------------------------------------------------------
+
+final_merge = left_join(tmp_input_exp_sig_keep,maf,by = c("pos" = "Position"))
+
+final_merge_missing = filter(final_merge,is.na(dbSNP))
+
+final_merge_keep = filter(final_merge,!is.na(dbSNP))
+
+# use spider to find missing rsid-----------------------------------------------
+
+snps = final_merge_missing[,c("chr","pos")]
 start_time <- Sys.time()
 info = data.frame()
 for(i in 1:nrow(snps)){
@@ -242,7 +237,6 @@ for(i in 1:nrow(snps)){
     for(j in 1:length(rsid_infor)){
       if(length(rsid_infor[[j]]>0)){
         print(j)
-        print("something in list")
         for(k in 1:length(rsid_infor[[j]]))
           print(k)
         extracted_value <- str_extract(rsid_infor[[j]][k], "^rs[^:]+")
@@ -278,82 +272,36 @@ nrow(info)
 
 filtered_data <- info %>% filter(!str_detect(merge_info, "has merged into"))
 filtered_data <- subset(filtered_data,!duplicated(rsid)) %>% subset(Variant_type=="SNV")
-# 9
 
-split_cols <- strsplit(filtered_data$GRCh38, ":")
-split_df <- as.data.frame(do.call(rbind, split_cols))
-colnames(split_df) <- c("chr", "pos")
-filtered_data = cbind(filtered_data,split_df) %>% .[c("rsid","Alleles","chr","pos")]
-filtered_data$pos = as.numeric(filtered_data$pos)
+df <- data.frame(
+  dbSNP = c("rs6884442","rs10514070","rs2227750","rs763692945","rs11954573","rs6880329","rs1743131620","rs458380","rs250733"),
+  Chromosome = c(5,5,5,5,5,5,5,5,5),
+  Position = c(76692609,76693219,76717639,77421814,76739242,76839299,77543474,76795672,76739176),
+  `Minor Allele` = c("C","A","C","C","A","T",NA,"T","A"),
+  `EUR Frequency` = c(0.22377,0.202996,0.14909,0,0.280649,0.4277,NA,0.15008,0.25688)
+)
 
-merge_dat_miss <- left_join(merge_dat_miss,filtered_data, by = "pos")
-merge_dat_miss$refsnp_id = merge_dat_miss$rsid
-merge_dat_miss$allele = merge_dat_miss$Alleles
-split_cols <- strsplit(merge_dat_miss$allele, ">")
-split_df <- as.data.frame(do.call(rbind, split_cols))
-colnames(split_df) <- c("major_allele", "minor_allele")
-merge_dat_miss = cbind(merge_dat_miss,split_df)
-table(merge_dat_miss$major_allele == merge_dat_miss$ref)
-# TRUE 31
-merge_dat_miss$eaf = ifelse(merge_dat_miss$major_allele == merge_dat_miss$ref,merge_dat_miss$maf,1-merge_dat_miss$maf)
-merge_dat_miss$minor_allele = merge_dat_miss$minor_allele.1
-merge_dat_miss$chr = merge_dat_miss$chr.x
-final_merge = rbind(merge_dat_keep,merge_dat_miss[,c(colnames(merge_dat_keep))])
-nrow(final_merge)
-# 1490
-# if one SNP shows in multiple tissue, keep the one with lowest p
-# final_merge <- final_merge[order(final_merge$pval_nominal), ]
-final_merge <- final_merge[order(final_merge$pval_nominal,
-                                 final_merge$refsnp_id), ]
+df = rbind(df,data.frame(maf))
+df$EUR.Frequency = as.numeric(df$EUR.Frequency)
 
-final_merge_group <- final_merge %>%
-  group_by(refsnp_id) %>%
-  filter(pval_nominal == min(pval_nominal)) %>% data.frame()
-# 247
+res = left_join(tmp_input_exp_sig_keep,df,by = c("pos" = "Position"))
 
-write.table(final_merge_group$refsnp_id, file = paste0(rdsf_personal,"data/par1/f2r_gtexcrosstissue_rsid.txt"),
-            sep= ' ', row.names = F,col.names= F,quote = F)
+res$eaf = ifelse(test = res$alt == res$Minor.Allele, yes = res$EUR.Frequency, no = 
+                   ifelse(test = res$ref == res$Minor.Allele, yes = 1 - res$EUR.Frequency, no = NA))
 
-# use ensembl VEP to get Eur AF ------------------------------------------------
+res = filter(res,!is.na(eaf))
 
-cross_tissue_rsid_maf = fread(paste0(rdsf_personal,"data/par1/crosstissue_rsid_eurmaf.txt"))
-cross_tissue_rsid_maf = cross_tissue_rsid_maf[,c("#Uploaded_variation","Allele","EUR_AF")]
-colnames(cross_tissue_rsid_maf) = c("refsnp_id","Allele","EUR_AF")
-cross_tissue_rsid_maf = subset(cross_tissue_rsid_maf,EUR_AF != "-")
-cross_tissue_rsid_maf = cross_tissue_rsid_maf[!duplicated(cross_tissue_rsid_maf$refsnp_id),]
-final_merge_group = left_join(final_merge_group,cross_tissue_rsid_maf,by = "refsnp_id")
+result <- res %>%
+  group_by(dbSNP) %>%
+  arrange(pval_nominal, desc(samplesize)) %>%
+  filter(row_number() == 1) %>%
+  ungroup()
 
-table(is.na(final_merge_group$Allele))
-# 240 + 7
-table(final_merge_group$alt == final_merge_group$Allele)
-#   2 + 238
-# 2 FALSE contain AF = 0
-table(is.na(final_merge_group$Allele))
-# 7 SNPs no maf information
-# need to find 9 SNPs manually
-final_merge_group_keep = final_merge_group[!is.na(final_merge_group$Allele)&final_merge_group$EUR_AF != 0,]
-# all allele = alt
-final_merge_group_keep$eaf = ifelse(final_merge_group_keep$EUR_AF<0.5,final_merge_group_keep$maf,1-final_merge_group_keep$maf)
-
-final_merge_group_missing = final_merge_group[is.na(final_merge_group$Allele)|final_merge_group$EUR_AF == 0,]
-final_merge_group_missing[final_merge_group_missing$refsnp_id == "rs250733",c("Allele","EUR_AF")] = c("G","0.73734")
-final_merge_group_missing[final_merge_group_missing$refsnp_id == "rs458380",c("Allele","EUR_AF")] = c("T","0.15008")
-final_merge_group_missing[final_merge_group_missing$refsnp_id == "rs6880329",c("Allele","EUR_AF")] = c("T","0.4277")
-final_merge_group_missing[final_merge_group_missing$refsnp_id == "rs11954573",c("Allele","EUR_AF")] = c("A","0.280649")
-final_merge_group_missing[final_merge_group_missing$refsnp_id == "rs2227750",c("Allele","EUR_AF")] = c("C","0.14909")
-final_merge_group_missing[final_merge_group_missing$refsnp_id == "rs463188",c("Allele","EUR_AF")] = c("T","0.7030")
-final_merge_group_missing[final_merge_group_missing$refsnp_id == "rs6884442",c("Allele","EUR_AF")] = c("C","0.22377")
-final_merge_group_missing[final_merge_group_missing$refsnp_id == "rs10514070",c("Allele","EUR_AF")] = c("A","0.202996")
-final_merge_group_missing[final_merge_group_missing$refsnp_id == "rs153308",c("Allele","EUR_AF")] = c("T","0.2523")
-final_merge_group_missing$eaf = ifelse(final_merge_group_missing$EUR_AF<0.5,final_merge_group_missing$maf,1-final_merge_group_missing$maf)
-
-final_cross_tissue = rbind(final_merge_group_missing,final_merge_group_keep)
-
-final_cross_tissue_format = format_data(final_cross_tissue,
-                                        type = "exposure",
+cross_tissue_format = format_data(data.frame(result),
+                                        type = "outcome",
                                         chr_col = "chr",
                                         pos_col = "pos",
-                                        snp_col = "refsnp_id",
+                                        snp_col = "dbSNP",
                                         beta_col = "beta",
                                         se_col = "se",
                                         eaf_col = "eaf",
@@ -361,6 +309,16 @@ final_cross_tissue_format = format_data(final_cross_tissue,
                                         other_allele_col = "ref",
                                         phenotype_col = "tissue",
                                         pval_col = "pval_nominal")
-colnames(final_cross_tissue_format)[colnames(final_cross_tissue_format) == "exposure"] <- "tissue"
-final_cross_tissue_format$exposure = "F2R cross tissues Gtex"
+colnames(cross_tissue_format)[colnames(cross_tissue_format) == "outcome"] <- "tissue"
+cross_tissue_format$outcome = "F2R cross tissues Gtex"
+
+f2r_gtex_cross_str_exp = cross_tissue_format %>% 
+  dplyr::filter(chr.outcome == 5 & pos.outcome<=76835770 & pos.outcome>=76616126) %>% 
+  ld_clump_local(. ,threshold = 5e-8, r2 = 0.001) %>% 
+  mutate(exposure = "F2R Gtex cross str")
+
+f2r_gtex_cross_wk_exp = cross_tissue_format %>% 
+  dplyr::filter(chr.outcome == 5 & pos.outcome<=76835770 & pos.outcome>=76616126) %>% 
+  ld_clump_local(. ,threshold = 5e-8, r2 = 0.1) %>% 
+  mutate(exposure = "F2R Gtex cross wk")
 
