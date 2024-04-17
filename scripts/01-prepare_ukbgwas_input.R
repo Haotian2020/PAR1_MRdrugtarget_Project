@@ -1,3 +1,5 @@
+# Script for phenotype data input into UKB GWAS pipeline
+
 `%notin%` <- Negate(`%in%`)
 vars <- c("eid","31-0.0","21022-0.0", # ID, sex, age,
           paste0("41270-0.",seq(0,225)))
@@ -22,6 +24,7 @@ codes$var_code <- gsub("-.*","",as.character(codes$var_code))
 # FinnGen definition for NS ----------------------------------------------------
 # include code start with N04
 # exclude code N14_GLOMERULAR defined by FG, N00, N01, N02, N03, N05, N06, N07, N08
+
 cases_rows <- codes[grep("^N04", codes$value_code), ]
 # unique 410
 exc_rows <- codes[grep("^(N00|N01|N02|N03|N05|N06|N07|N08)", codes$value_code), ]
