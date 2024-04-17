@@ -1,3 +1,5 @@
+# function for finngen gwas format ---------------------------------------------
+
 FinngenFormat = function(finngwas_name,outcome_name,ncase,ncontrol){
   finngwas = vroom(paste0(rdsf_personal,"data/",finngwas_name))
   head(finngwas)
