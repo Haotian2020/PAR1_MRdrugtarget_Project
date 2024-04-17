@@ -33,6 +33,12 @@ dvt_gwas_format = FinngenFormat("summary_stats_finngen_R10_I9_PHLETHROMBDVTLOW.g
 
 data.table::fwrite(dvt_gwas_format, paste0(rdsf_personal,"./data/format_data/dvt_GWAS_tidy_outcome.csv"))
 
+# R10 FinnGen IGA
+iga_gwas_name = "summary_stats_finngen_R10_N14_IGA_NEPHROPATHY.gz"
+iga_gwas_format = FinngenFormat("summary_stats_finngen_R10_N14_IGA_NEPHROPATHY.gz","IgA Finngen R10",863, 519347)
+
+data.table::fwrite(iga_gwas_format, paste0(rdsf_personal,"./data/format_data/iga_GWAS_tidy_outcome.csv"))
+
 # format gwas data from meta-analysis of NS UKB and FinnGen R10-----------------
 
 ns_meta = fread(paste0(rdsf_personal,"data/meta_ns.txt")) %>% data.frame()
