@@ -4,21 +4,23 @@ uvmr <- function(exp_name, out_name){
   
   instruments <- data.table::fread(paste0(rdsf_personal,"data/par1/f2r_all_instruments.csv"), data.table = FALSE)
   
-  tmp_exp = instruments %>% filter(exposure == exp_name)
+  tmp_exp = instruments %>% dplyr::filter(exposure == exp_name)
   
   print(paste0("Exposure name is ", unique(tmp_exp$exposure)))
   
   mr_bin = data.frame()
   
   for(each in out_name){
+    
     if(each %in% ao$id){
+      
       print(paste0("Outcome name is ",each))
       print("Reading from IEU open GWAS database")
       
       out_dat <- extract_outcome_data(snps = tmp_exp$SNP, outcomes = each, access_token = NULL, proxies = F)
       
     } else if(each %in% c("ns_meta","egfr_sd","ckd","bun_sd","uacr","ma",
-                             "vte","dvt","aet")){
+                             "vte","dvt","aet","cra","iga")){
       
       print(paste0("outcome name is ",each))
       
@@ -37,12 +39,19 @@ uvmr <- function(exp_name, out_name){
       
     }
     
-    dat <- TwoSampleMR::harmonise_data(exposure_dat = tmp_exp, outcome_dat = out_dat,action = 2)
+    if(!is.null(out_dat)){
+      
+      dat <- TwoSampleMR::harmonise_data(exposure_dat = tmp_exp, outcome_dat = out_dat,action = 2)
     
-    set.seed(123)
+      set.seed(123)
     
-    mr <- mr(dat)
-    mr_bin <- rbind(mr_bin,mr)
+      mr <- mr(dat)
+      
+      mr_bin <- rbind(mr_bin,mr)
+      
+    }
+    
+
   }
   
   return(mr_bin)
