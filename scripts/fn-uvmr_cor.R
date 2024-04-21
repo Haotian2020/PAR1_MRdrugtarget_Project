@@ -21,7 +21,6 @@ MRforCorrelated = function(dat_har,i){
   return(mr_ld)
 }
 
-
 uvmr_cor <- function(exp_name, out_name){
   
   instruments <- data.table::fread(paste0(rdsf_personal,"data/par1/f2r_all_instruments.csv"), data.table = FALSE)
