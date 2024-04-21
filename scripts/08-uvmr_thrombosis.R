@@ -7,22 +7,26 @@ thromb_outcomes = c("vte","aet","dvt")
 # for strongly independent exposure --------------------------------------------
 
 ukb_eqtl_pos_mr = rbind(uvmr(exp_name = "F2R ukb str", out_name = thromb_outcomes),
-                    uvmr(exp_name = "F2R eqtl str", out_name = thromb_outcomes) )
+                    uvmr(exp_name = "F2R eqtl str", out_name = thromb_outcomes))
 
 kidney_pos_mr = rbind(uvmr(exp_name = "F2R kidney meta str",out_name = thromb_outcomes),
                   uvmr(exp_name = "F2R tubule meta str",out_name = thromb_outcomes) )
 
 gtex_pos_mr = uvmr(exp_name = "F2R Gtex str",out_name = thromb_outcomes)
 
+gtex_cross_pos_mr = uvmr(exp_name = "F2R Gtex cross str",out_name = thromb_outcomes)
+
 # for weakly independent exposure ----------------------------------------------
 
 ukb_eqtl_pos_mr_ld = rbind(uvmr_cor(exp_name = "F2R ukb wk", out_name = thromb_outcomes),
                        uvmr_cor(exp_name = "F2R eqtl wk", out_name = thromb_outcomes) )
 
-kidney_pos_mr = rbind(uvmr_cor(exp_name = "F2R kidney meta str",out_name = thromb_outcomes),
+kidney_pos_mr_ld = rbind(uvmr_cor(exp_name = "F2R kidney meta str",out_name = thromb_outcomes),
                       uvmr_cor(exp_name = "F2R tubule meta str",out_name = thromb_outcomes) )
 
-gtex_pos_mr = uvmr_cor(exp_name = "F2R Gtex str",out_name = thromb_outcomes)
+# gtex_pos_mr = uvmr_cor(exp_name = "F2R Gtex str",out_name = thromb_outcomes)
+
+gtex_cross_pos_mr_ld = uvmr_cor(exp_name = "F2R Gtex cross wk",out_name = thromb_outcomes)
 
 # write results ----------------------------------------------------------------
 

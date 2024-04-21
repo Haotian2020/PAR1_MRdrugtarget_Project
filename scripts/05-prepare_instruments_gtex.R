@@ -47,7 +47,7 @@ f2r_gtex_str_exp = f2r_gtexbld_gwas_format %>%
   ld_clump_local(. ,threshold = 5e-8, r2 = 0.001) %>% 
   mutate(exposure = "F2R Gtex str")
 
-# weakly correlated SNP is same as the strongly independent one
+# weakly correlated SNP is same as the strongly independent one ----------------
 
 # no siginificant signal in gtex v8 kidney tissue ------------------------------
 
@@ -293,7 +293,7 @@ res = filter(res,!is.na(eaf))
 
 result <- res %>%
   group_by(dbSNP) %>%
-  arrange(pval_nominal, desc(samplesize)) %>%
+  arrange(samplesize) %>%
   filter(row_number() == 1) %>%
   ungroup()
 
@@ -321,4 +321,7 @@ f2r_gtex_cross_wk_exp = cross_tissue_format %>%
   dplyr::filter(chr.outcome == 5 & pos.outcome<=76835770 & pos.outcome>=76616126) %>% 
   ld_clump_local(. ,threshold = 5e-8, r2 = 0.1) %>% 
   mutate(exposure = "F2R Gtex cross wk")
+
+write.table(rbind(f2r_gtex_cross_str_exp,f2r_gtex_cross_wk_exp), file = paste0(rdsf_personal,"data/par1/f2r_gtex_cross_exp.csv"),
+            sep= ',', row.names = F,col.names= T)
 

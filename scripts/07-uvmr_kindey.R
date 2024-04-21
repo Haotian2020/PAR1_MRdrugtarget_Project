@@ -11,10 +11,10 @@ kidney_outcomes = c("ns_meta","egfr_sd","ckd",
 ukb_eqtl_mr = rbind(uvmr(exp_name = "F2R ukb str", out_name = kidney_outcomes),
                     uvmr(exp_name = "F2R eqtl str", out_name = kidney_outcomes) )
 
-kidney_mr = rbind(uvmr(exp_name = "F2R kidney meta str",out_name = kidney_outcomes),
-                  uvmr(exp_name = "F2R tubule meta str",out_name = kidney_outcomes) )
+kidney_mr = rbind(uvmr(exp_name = "F2R kidney meta str", out_name = kidney_outcomes),
+                  uvmr(exp_name = "F2R tubule meta str", out_name = kidney_outcomes))
 
-gtex_mr = uvmr(exp_name = "F2R Gtex str",out_name = kidney_outcomes)
+gtex_mr = uvmr(exp_name = "F2R Gtex str", out_name = kidney_outcomes)
 
 # for weakly independent exposure ----------------------------------------------
 
@@ -35,3 +35,9 @@ data.table::fwrite(rbind(ukb_eqtl_mr%>%filter(method %in% c("Inverse variance we
                          gtex_mr%>%filter(method %in% c("Inverse variance weighted","Wald ratio"))%>%generate_odds_ratios), 
                    paste0(rdsf_personal,"./results/par1_kidney_abstract.csv"))
 
+
+uvmr(exp_name = "F2R ukb str", out_name = c("ieu-b-38", "ieu-b-39"))
+
+uvmr(exp_name = "F2R eqtl str", out_name = c("ieu-b-38","ieu-b-39"))
+
+uvmr(exp_name = "F2R kidney meta str", out_name = c("ieu-b-38","ieu-b-39"))
