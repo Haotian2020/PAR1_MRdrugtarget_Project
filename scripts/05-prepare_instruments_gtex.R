@@ -178,7 +178,7 @@ for (i in 1:length(tmp_unique_pos$chr)) {
 # QC step ----------------------------------------------------------------------
 rsid_store_qc1 = subset(rsid_store,chrom_start == chrom_end)
 rsid_store_qc1$pos = rsid_store_qc1$chrom_start
-rsid_store_qc1 = rsid_store_qc1[,c("refsnp_id","chr_name","pos","allele")]
+rsid_store_qc1 = rsid_store_qc1[, c("refsnp_id", "chr_name", "pos", "allele")]
 rsid_store_qc1 = subset(rsid_store_qc1,!is.na(allele))
 
 unique_refsnp_rows <- rsid_store_qc1[!duplicated(rsid_store_qc1$refsnp_id), ]
