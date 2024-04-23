@@ -291,9 +291,16 @@ res$eaf = ifelse(test = res$alt == res$Minor.Allele, yes = res$EUR.Frequency, no
 
 res = filter(res,!is.na(eaf))
 
+# save results -----------------------------------------------------------------
+
+write.table(res, file = paste0(rdsf_personal,"data/par1/f2r_gtex_cross_all.csv"),
+            sep= ',', row.names = F,col.names= T)
+
+res = fread(paste0(rdsf_personal,"data/par1/f2r_gtex_cross_all.csv"))
+
 result <- res %>%
   group_by(dbSNP) %>%
-  arrange(samplesize) %>%
+  arrange(pval_nominal) %>%
   filter(row_number() == 1) %>%
   ungroup()
 
