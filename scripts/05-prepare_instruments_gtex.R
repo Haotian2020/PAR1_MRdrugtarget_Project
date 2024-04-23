@@ -331,4 +331,3 @@ f2r_gtex_cross_wk_exp = cross_tissue_format %>%
 
 write.table(rbind(f2r_gtex_cross_str_exp,f2r_gtex_cross_wk_exp), file = paste0(rdsf_personal,"data/par1/f2r_gtex_cross_exp.csv"),
             sep= ',', row.names = F,col.names= T)
-
