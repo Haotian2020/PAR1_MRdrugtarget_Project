@@ -1,4 +1,4 @@
-ao <- available_outcomes(access_token = NULL)
+ao <- available_outcomes()
 
 uvmr <- function(exp_name, out_name){
   
@@ -17,7 +17,7 @@ uvmr <- function(exp_name, out_name){
       print(paste0("Outcome name is ",each))
       print("Reading from IEU open GWAS database")
       
-      out_dat <- extract_outcome_data(snps = tmp_exp$SNP, outcomes = each, access_token = NULL, proxies = F)
+      out_dat <- extract_outcome_data(snps = tmp_exp$SNP, outcomes = each, proxies = F)
       
     } else if(each %in% c("ns_meta","egfr_sd","ckd","bun_sd","uacr","ma",
                              "vte","dvt","aet","cra","iga")){

@@ -1,3 +1,7 @@
+# functions for MR with correlated instruments ---------------------------------
+
+# function formatting ivw and egger --------------------------------------------
+
 mr_ld_format = function(mrivw, mregger){
   dfivw <- c("outcome" = mrivw@Outcome, "exposure"= mrivw@Exposure,"method" = "Inverse variance weighted (correlated)", "b"=mrivw@Estimate, "se"=mrivw@StdError, 
              "pval"=mrivw@Pvalue, "nsnp"=mrivw@SNPs,"id.exposure" = "MRaccountLD","id.outcome" = "MRaccountLD")
@@ -21,6 +25,8 @@ MRforCorrelated = function(dat_har,i){
   return(mr_ld)
 }
 
+# function doing MR with correlated instruments --------------------------------
+
 uvmr_cor <- function(exp_name, out_name){
   
   instruments <- data.table::fread(paste0(rdsf_personal,"data/par1/f2r_all_instruments.csv"), data.table = FALSE)
@@ -37,7 +43,7 @@ uvmr_cor <- function(exp_name, out_name){
       print(paste0("Outcome name is ",each))
       print("Reading from IEU open GWAS database")
       
-      out_dat <- extract_outcome_data(snps = tmp_exp$SNP, outcomes = each, access_token = NULL, proxies = F)
+      out_dat <- extract_outcome_data(snps = tmp_exp$SNP, outcomes = each, proxies = F)
       
     } else if(each %in% c("ns_meta","egfr_sd","ckd","bun_sd","uacr_sd","ma",
                           "vte","dvt","aet")){
