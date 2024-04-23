@@ -298,11 +298,16 @@ write.table(res, file = paste0(rdsf_personal,"data/par1/f2r_gtex_cross_all.csv")
 
 res = fread(paste0(rdsf_personal,"data/par1/f2r_gtex_cross_all.csv"))
 
+res$R = get_r_from_bsen(res$beta,res$se,res$samplesize)
+res$Rsq = res$R^2
+res$F_stat = (res$samplesize - 2)*((res$Rsq)/(1-res$Rsq))
+
 result <- res %>%
   group_by(dbSNP) %>%
   arrange(pval_nominal) %>%
   filter(row_number() == 1) %>%
-  ungroup()
+  ungroup() %>% arrange(pos) %>% 
+  data.frame()
 
 cross_tissue_format = format_data(data.frame(result),
                                         type = "outcome",
