@@ -30,6 +30,10 @@ f2r_ukb_wk_exp =  f2r_ukb %>%
 # eqtl gen 37 build
 
 # awk -F' ' '$8 == "ENSG00000181104" { print }' eqtlgen_full_cis_summary_statistics.txt > f2r_eqtlgen.txt
+# awk -F' ' '$8 == "ENSG00000164251" { print }' eqtlgen_full_cis_summary_statistics.txt > f2rl1_eqtlgen.txt
+# awk -F' ' '$8 == "ENSG00000164220" { print }' eqtlgen_full_cis_summary_statistics.txt > f2rl2_eqtlgen.txt
+# awk -F' ' '$8 == "ENSG00000127533" { print }' eqtlgen_full_cis_summary_statistics.txt > f2rl3_eqtlgen.txt
+
 
 # Load and format the f2r dataset from eqtlg and  ------------------------------
 
