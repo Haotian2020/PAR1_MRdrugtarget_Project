@@ -15,6 +15,7 @@ source("fn-ld_clump_local")
 
 f2r_gtexbld_gwas = fread(paste0(rdsf_personal,"data/GTEx_Analysis_v8_eQTL/Whole_Blood.v8.signif_variant_gene_pairs.txt.gz"))
 f2r_gtexbld_gwas = f2r_gtexbld_gwas[grepl("ENSG00000181104", f2r_gtexbld_gwas$gene_id), ]
+# f2rl1_gtexbld_gwas = f2r_gtexbld_gwas[grepl("ENSG00000164251", f2r_gtexbld_gwas$gene_id), ]
 f2r_gtexbld_gwas = subset(f2r_gtexbld_gwas,pval_nominal<=5e-8)
 
 # manually add SNP -------------------------------------------------------------
