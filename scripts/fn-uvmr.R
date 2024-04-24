@@ -2,11 +2,20 @@ ao <- available_outcomes()
 
 uvmr <- function(exp_name, out_name){
   
+  
   instruments <- data.table::fread(paste0(rdsf_personal,"data/par1/f2r_all_instruments.csv"), data.table = FALSE)
   
   tmp_exp = instruments %>% dplyr::filter(exposure == exp_name)
   
   print(paste0("Exposure name is ", unique(tmp_exp$exposure)))
+  
+  if(exp_name %in% c("f2r","f2rl1")){
+    
+    tmp_exp = fread(paste0(rdsf_personal, "data/format_data/",exp_name,"_tophits.tsv"))
+    
+    print("data from whole set of eqtlgen")
+  }
+  
   
   mr_bin = data.frame()
   
@@ -19,8 +28,9 @@ uvmr <- function(exp_name, out_name){
       
       out_dat <- extract_outcome_data(snps = tmp_exp$SNP, outcomes = each, proxies = F)
       
-    } else if(each %in% c("ns_meta","egfr_sd","ckd","bun_sd","uacr","ma",
-                             "vte","dvt","aet","cra","iga")){
+    } else if(each %in% c("ns_meta","ns","egfr_sd","ckd","bun_sd","uacr","ma",
+                          "vte","dvt","aet",
+                          "cra","iga")){
       
       print(paste0("outcome name is ",each))
       
