@@ -1,4 +1,5 @@
 # save all instruments in the same file ----------------------------------------
+# colnames needed --------------------------------------------------------------
 
 col_names = c(
   "SNP",

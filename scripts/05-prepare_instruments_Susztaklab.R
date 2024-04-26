@@ -31,7 +31,6 @@ split_df <- as.data.frame(do.call(rbind, split_cols))
 colnames(split_df) <- c("chr", "pos")
 f2r_kiney_meta <- cbind(f2r_kiney_meta, split_df)
 
-
 # find these 1618 SNPs by using VEP in European pop ----------------------------
 
 write.table(f2r_kiney_meta$RSID, file = paste0(rdsf_personal,"data/par1/f2r_kiney_meta_rsid.txt"),
