@@ -4,24 +4,24 @@ generate_lines <- function(line_number) {
   lines <- list()
   
   for (i in seq_len(line_number)) {
-    key <- as.character(i * 5 + 2)
+    key <- as.character(i * 1 + 2)
     lines[[key]] <- gpar(lty = 1, lwd = 1, col = "black")
   }
   
   return(lines)
 }
 
-# function to plot mr results
+# function to plot mr results --------------------------------------------------
 
-uvmr_plot <- function(dat, exp, out, line_number, xlabel,x_ticks,intervals) {
-  # remove id.exposure and id.outcome columns ------------------------------------
+uvmr_plot <- function(dat, exp, out, line_number, xlabel, x_ticks, intervals) {
+  # remove id.exposure and id.outcome columns ----------------------------------
   
   mydata  <- data.frame(dat) %>%
     select(-c("id.exposure", "id.outcome")) %>%
     subset(exposure %in% exp & outcome %in% out) %>%
     generate_odds_ratios()
   
-  # format data ------------------------------------------------------------------
+  # format data ----------------------------------------------------------------
   
   mydata$beta <-
     format(round(mydata$b, digits = 3),
@@ -39,23 +39,26 @@ uvmr_plot <- function(dat, exp, out, line_number, xlabel,x_ticks,intervals) {
       mydata$method,
       levels = c(
         "Inverse variance weighted",
-        "Weighted median",
-        "Steiger Filtering",
-        "Weighted mode",
-        "MR Egger",
-        "Simple mode"
+        "Inverse variance weighted (correlated)",
+        "Wald ratio"
       )
     )
   
   mydata$outcome <-
     factor(
       mydata$outcome,
-      levels = c("Urate (CKDGen)",
-                 "Urate (UKB)",
-                 "SBP (UKB)",
-                 "DBP (UKB)",
-                 "eGFR (CKDGen)",
-                 "Serum creatinine (eGFRcrea)")
+      levels = c("Nephrotic syndrome UKB+FinnGen R10",          
+                 "NS Finngen R10",                              
+                 "eGFR (CKDGen2019)",                       
+                 "ckd",                                        
+                 "BUN",                                         
+                 "UACR",                                        
+                 "Microalbuminuria",                            
+                 "Microalbumin in urine || id:ukb-d-30500_irnt",
+                 "Albumin || id:ukb-d-30600_irnt",
+                 "VTE Finngen R10",
+                 "AET Finngen R10",
+                 "DVT Finngen R10")
     )
   
   sorted_index <- order(mydata$outcome,mydata$method)
@@ -63,15 +66,8 @@ uvmr_plot <- function(dat, exp, out, line_number, xlabel,x_ticks,intervals) {
   
   # make the table shown with the figure -----------------------------------------
   
-  for (i in c(seq(2, nrow(mydata), 5),
-              seq(3, nrow(mydata), 5),
-              seq(4, nrow(mydata), 5),
-              seq(5, nrow(mydata), 5))) {
-    mydata$outcome[i] <- NA
-    mydata$exposure[i] <- NA
-    mydata$nsnp[i] <- NA
-  }
   mydata[-1, "exposure"] <- NA
+  mydata[-1, "method"] <- NA
   mydata = data.frame(mydata)
   
   tabletext <- cbind(
