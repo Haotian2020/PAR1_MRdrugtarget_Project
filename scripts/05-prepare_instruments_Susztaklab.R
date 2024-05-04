@@ -20,11 +20,7 @@ source("fn-ld_clump_local")
 
 kiney_meta = fread(paste0(rdsf_personal,"data/par1/Kidney_eQTL_Meta_S686_Significant.q0.01.txt.gz"))
 
-kiney_tube = vroom(paste0(rdsf_personal,"data/par1/Kidney_eQTL.TubsigeQTLsFormated.txt.gz"))
-
 f2r_kiney_meta = kiney_meta[grep(pattern = "ENSG00000181104",kiney_meta$GeneID),] %>% data.frame()
-
-f2r_kiney_tube = kiney_tube[grep(pattern = "ENSG00000181104",kiney_tube$GeneID),] %>% data.frame()
 
 split_cols <- strsplit(f2r_kiney_meta$SNP_POS, ":")
 split_df <- as.data.frame(do.call(rbind, split_cols))
@@ -40,7 +36,7 @@ kidneymeta_rsid_maf = fread(paste0(rdsf_personal,"data/par1/findeurmafforpar1kid
 
 # qc step
 
-kidneymeta_rsid_maf = subset(kidneymeta_rsid_maf,EUR_AF!="-")
+kidneymeta_rsid_maf = subset(kidneymeta_rsid_maf, EUR_AF!="-")
 kidneymeta_rsid_maf = kidneymeta_rsid_maf[,c("#Uploaded_variation","Allele","EUR_AF")]
 colnames(kidneymeta_rsid_maf) = c("RSID","Allele","EUR_AF")
 kidneymeta_rsid_maf = kidneymeta_rsid_maf[!duplicated(kidneymeta_rsid_maf$RSID),]
@@ -66,9 +62,12 @@ f2r_kiney_meta_format = format_data(
 f2r_kidney_str_exp = f2r_kiney_meta_format %>% 
   filter(chr.outcome == 5 & pos.outcome <=76131595 & pos.outcome>=75911951) %>% 
   ld_clump_local(.,threshold = 5e-8, r2 = 0.001, ignore_samplesize = T) %>% 
-  mutate(exposure = "F2R kidney meta str")
+  mutate(exposure = "F2R kidney meta str") %>% mutate(samplesize.exposure = 686)
 
 # Susztaklab Tubule-specifc ----------------------------------------------------
+kiney_tube = vroom(paste0(rdsf_personal,"data/par1/Kidney_eQTL.TubsigeQTLsFormated.txt.gz"))
+f2r_kiney_tube = kiney_tube[grep(pattern = "ENSG00000181104",kiney_tube$GeneID),] %>% data.frame()
+
 split_cols <- strsplit(f2r_kiney_tube$SNP_Location, ":")
 split_df <- as.data.frame(do.call(rbind, split_cols))
 colnames(split_df) <- c("chr", "pos")
@@ -83,11 +82,10 @@ kidneytube_rsid_maf = fread(paste0(rdsf_personal,"data/par1/kidneytube_rsid_eurm
 kidneytube_rsid_maf = subset(kidneytube_rsid_maf,EUR_AF!="-")
 kidneytube_rsid_maf = kidneytube_rsid_maf[,c("#Uploaded_variation","Allele","EUR_AF")]
 colnames(kidneytube_rsid_maf) = c("rsID","Allele","EUR_AF")
-kidneytube_rsid_maf = kidneytube_rsid_maf[!duplicated(kidneytube_rsid_maf$rsID),]
+kidneytube_rsid_maf = kidneytube_rsid_maf[!duplicated(kidneytube_rsid_maf$rsID),] %>% data.frame()
 
 f2r_kiney_tube = left_join(f2r_kiney_tube,kidneytube_rsid_maf,by = "rsID")
 f2r_kiney_tube$eaf = as.numeric(f2r_kiney_tube$EUR_AF)
-f2r_kiney_tube$pos = as.numeric(f2r_kiney_tube$pos)
 
 f2r_kiney_tube_format = format_data(
   dat = f2r_kiney_tube %>% data.frame(),
@@ -105,7 +103,7 @@ f2r_kiney_tube_format = format_data(
 f2r_kidneytube_str_exp = f2r_kiney_tube_format %>% 
   filter(chr.outcome == 5 & pos.outcome <=76131595 & pos.outcome >=75911951) %>% 
   ld_clump_local(.,threshold = 5e-8, r2 = 0.001, ignore_samplesize = T) %>% 
-  mutate(exposure = "F2R tubule meta str")
+  mutate(exposure = "F2R tubule meta str") %>% mutate(samplesize.exposure = 356)
 
 # No. weakly correlated SNP = 1; same as strongly independent ------------------
 
