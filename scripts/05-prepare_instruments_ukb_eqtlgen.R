@@ -12,7 +12,8 @@ source("fn-ld_clump_local")
 
 # f2r gene expression from ukb-ppp ----------------------------------------
 # ukb-ppp is 38 build
-f2r_ukb = vroom(paste0(rdsf_personal,"data/format_data/f2r_GWAS_tidy_outcome.csv"))
+
+f2r_ukb = vroom(paste0(rdsf_personal,"data/format_data/f2r_ukb_GWAS_tidy_outcome.csv"))
 
 f2r_ukb_str_exp = f2r_ukb %>% 
   filter(chr.outcome == 5 & pos.outcome<=76835770 & pos.outcome>=76616126) %>% 
@@ -23,7 +24,6 @@ f2r_ukb_wk_exp =  f2r_ukb %>%
   filter(chr.outcome == 5 & pos.outcome<=76835770 & pos.outcome>=76616126) %>% 
   ld_clump_local(.,threshold = 5e-8, r2 = 0.1) %>% 
   mutate(exposure = "F2R ukb wk")
-
 
 # f2r gene expression from eqtlgen ---------------------------------------------
 # filter with Linux commands first ---------------------------------------------
