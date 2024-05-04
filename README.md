@@ -27,11 +27,11 @@ Version of R: 4.2.2
 
 Main packages that need to be installed for running scripts: 
 
-[TwoSampleMR 0.5.11](https://github.com/MRCIEU/TwoSampleMR)
+[TwoSampleMR 0.6.1](https://github.com/MRCIEU/TwoSampleMR)
 
 [coloc 5.2.3](https://chr1swallace.github.io/coloc/)
 
-[ieugwasr 0.1.8](https://mrcieu.github.io/ieugwasr)
+[ieugwasr 1.0.0](https://mrcieu.github.io/ieugwasr)
 
 [forestplot 3.1.3](https://github.com/gforge/forestplot)
 
