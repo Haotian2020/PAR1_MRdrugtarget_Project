@@ -4,6 +4,12 @@
 res_pos = fread( paste0(rdsf_personal,"./results/par1_pos_res.csv")) %>% data.frame() %>% 
   subset(method %in% c( "Inverse variance weighted","Inverse variance weighted (correlated)","Wald ratio"))
 
+# change the direction to the drug effect
+res_pos$b = -res_pos$b
+res_pos = res_pos %>% generate_odds_ratios()
+
+data.table::fwrite(res_pos, paste0(rdsf_personal,"./results/par1_pos_res_drugdir.csv"))
+
 # draw -------------------------------------------------------------------------
 # Options: 
 # "F2R kidney meta str" "F2R tubule meta str" "F2R ukb str"        
