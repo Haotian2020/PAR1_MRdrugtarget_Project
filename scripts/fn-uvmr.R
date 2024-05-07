@@ -28,9 +28,8 @@ uvmr <- function(exp_name, out_name){
       
       out_dat <- extract_outcome_data(snps = tmp_exp$SNP, outcomes = each, proxies = F)
       
-    } else if(each %in% c("ns_meta","ns","egfr_sd","ckd","bun_sd","uacr","ma",
-                          "vte","dvt","aet",
-                          "cra","iga")){
+    } else if(each %in% c("ns_meta","ns","egfr_sd","ckd","uacr","ma",
+                          "vte","dvt","aet","mi")){
       
       print(paste0("outcome name is ",each))
       
