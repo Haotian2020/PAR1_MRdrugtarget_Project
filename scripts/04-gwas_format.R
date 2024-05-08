@@ -28,10 +28,14 @@ aet_gwas_format = FinngenFormat("summary_stats_finngen_R10_I9_ARTEMBTHR.gz","AET
 data.table::fwrite(aet_gwas_format, paste0(rdsf_personal,"./data/format_data/aet_GWAS_tidy_outcome.csv"))
 
 # R10 Finngen DVT
-dvt_gwas_name = "summary_stats_finngen_R10_I9_PHLETHROMBDVTLOW.gz"
 dvt_gwas_format = FinngenFormat("summary_stats_finngen_R10_I9_PHLETHROMBDVTLOW.gz","DVT Finngen R10",6501,422708)
 
 data.table::fwrite(dvt_gwas_format, paste0(rdsf_personal,"./data/format_data/dvt_GWAS_tidy_outcome.csv"))
+
+# R10 Finngen MI
+mi_gwas_format = FinngenFormat("summary_stats_finngen_R10_I9_MI_STRICT.gz","MI Finngen R10",26060,403149)
+
+data.table::fwrite(mi_gwas_format, paste0(rdsf_personal,"./data/format_data/mi_GWAS_tidy_outcome.csv"))
 
 # format gwas data from meta-analysis of NS UKB and FinnGen R10-----------------
 
