@@ -55,3 +55,20 @@ f2r_gtex_str_exp = f2r_gtexbld_gwas_format %>%
 write.table(f2r_gtex_str_exp, file = paste0(rdsf_personal,"data/par1/f2r_gtex_str_exp.csv"),
             sep= ',', row.names = F,col.names= T)
 
+
+# write a file for coloc use ---------------------------------------------------
+
+f2r_gtexbld_gwas = fread(paste0(rdsf_personal,"data/GTEx_Analysis_v8_eQTL/Whole_Blood.v8.signif_variant_gene_pairs.txt.gz"))
+f2r_gtexbld_gwas = f2r_gtexbld_gwas[grepl("ENSG00000181104", f2r_gtexbld_gwas$gene_id), ]
+data.table::fwrite(f2r_gtexbld_gwas, paste0(rdsf_personal,"./data/par1/f2r_gtexbld_gwas.txt"))
+
+f2r_gtexbld_gwas_mformat = MungeSumstats::format_sumstats(path=paste0(rdsf_personal,"data/par1/f2r_gtexbld_gwas.txt"),
+                                                       ref_genome="GRCh38",
+                                                       log_folder_ind=TRUE,
+                                                       imputation_ind=TRUE,
+                                                       log_mungesumstats_msgs=TRUE,
+                                                       log_folder = paste0(rdsf_personal,"data/"),
+                                                       dbSNP = 144,
+                                                       return_data = F,
+                                                       force_new=TRUE,
+                                                       save_path = paste0(rdsf_personal,"data/par1/f2r_gtexbld_mformat.tsv.gz"))
