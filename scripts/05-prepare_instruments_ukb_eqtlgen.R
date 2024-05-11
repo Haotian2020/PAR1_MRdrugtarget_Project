@@ -66,15 +66,16 @@ f2r_eqtlg_dat_format = TwoSampleMR::format_data(
   pval_col = "Pvalue",
   samplesize_col = "NrSamples",
   chr_col = "SNPChr",
-  pos_col = "SNPPos")
+  pos_col = "SNPPos",
+  min_pval = 1e-500)
 
 f2r_eqtl_str_exp =  f2r_eqtlg_dat_format %>% 
-  filter(chr.outcome == 5 & pos.outcome<=76131595 & pos.outcome>=75911951) %>% 
+  dplyr::filter(chr.outcome == 5 & pos.outcome<=76131595 & pos.outcome>=75911951) %>% 
   ld_clump_local(.,threshold = 5e-8, r2 = 0.001) %>% 
   mutate(exposure = "F2R eqtl str")
 
 f2r_eqtl_wk_exp =  f2r_eqtlg_dat_format %>% 
-  filter(chr.outcome == 5 & pos.outcome<=76131595 & pos.outcome>=75911951) %>% 
+  dplyr::filter(chr.outcome == 5 & pos.outcome<=76131595 & pos.outcome>=75911951) %>% 
   ld_clump_local(.,threshold = 5e-8, r2 = 0.1) %>% 
   mutate(exposure = "F2R eqtl wk")
 
