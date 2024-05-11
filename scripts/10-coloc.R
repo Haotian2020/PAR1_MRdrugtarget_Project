@@ -10,27 +10,11 @@ f2r_Glomneph2_marker = f2r_Glomneph2[,c("SNP","chr.outcome","pos.outcome")]
 colnames(f2r_Glomneph2_marker) = c("rsid","chrom","pos")
 f2r_Glomneph2_marker_hg38 = perform_liftover(f2r_Glomneph2_marker)
 f2r_Glomneph2_hg3738 <- merge(f2r_Glomneph2, f2r_Glomneph2_marker_hg38, by.x = "SNP", by.y = "rsid_b37")
-# f2r_Glomneph2_hg3738 = select(f2r_Glomneph2_hg3738,-c(chr.outcome,pos.outcome,chr_b37,pos_b37))
 
 f2r_Tubeneph2_marker = f2r_Tubeneph2[,c("SNP","chr.outcome","pos.outcome")]
 colnames(f2r_Tubeneph2_marker) = c("rsid","chrom","pos")
 f2r_Tubeneph2_marker_hg38 = perform_liftover(f2r_Tubeneph2_marker)
 f2r_Tubeneph2_hg3738 <- merge(f2r_Tubeneph2, f2r_Tubeneph2_marker_hg38, by.x = "SNP", by.y = "rsid_b37")
-# f2r_Tubeneph2_hg3738 = select(f2r_Tubeneph2_hg3738,-c(chr.outcome,pos.outcome,chr_b37,pos_b37))
-
-
-
-
-colnames(f2r_Glomneph2_coloc38)[colnames(f2r_Glomneph2_coloc38) == "chr_b38"] <- "chr.outcome"
-colnames(f2r_Glomneph2_coloc38)[colnames(f2r_Glomneph2_coloc38) == "pos_b38"] <- "pos.outcome"
-colnames(f2r_Tubeneph2_coloc38)[colnames(f2r_Tubeneph2_coloc38) == "chr_b38"] <- "chr.outcome"
-colnames(f2r_Tubeneph2_coloc38)[colnames(f2r_Tubeneph2_coloc38) == "pos_b38"] <- "pos.outcome"
-
-f2r_Glomneph2_coloc37 = subset(f2r_Glomneph2_hg3738,pos_b38>=75490144 & pos_b38 <= 76490144)
-f2r_Tubeneph2_coloc37 = subset(f2r_Tubeneph2_hg3738,pos_b38>=75490144 & pos_b38 <= 76490144)
-
-f2r_Glomneph2_coloc38 = subset(f2r_Glomneph2_hg3738,pos_b38>=76232299 & pos_b38 <= 77232299)
-f2r_Tubeneph2_coloc38 = subset(f2r_Tubeneph2_hg3738,pos_b38>=76232299 & pos_b38 <= 77232299)
 
 # ukb is 38 build
 # eqtlgen is 37 build
@@ -39,8 +23,8 @@ f2r_Tubeneph2_coloc38 = subset(f2r_Tubeneph2_hg3738,pos_b38>=76232299 & pos_b38 
 # coloc between ukb-ppp and nephqtl2 -------------------------------------------
 # leading SNP: rs168753
 # chr pos 5 76732299
-76732299+300000
-76732299-300000
+76732299 + 300000
+76732299 - 300000
 
 f2r_ukb = fread(paste0(rdsf_personal,"data/format_data/f2r_ukb_GWAS_tidy_outcome.csv")) %>% data.frame()
 f2r_ukb_coloc = subset(f2r_ukb, chr.outcome ==5 & pos.outcome >= 76432299 & pos.outcome <= 77032299)
@@ -89,13 +73,14 @@ ukb_Tubeneph2_result
 # 1.812000e+03 1.087527e-45 5.441206e-01 8.415268e-46 4.210049e-01 3.487449e-02 
 
 # coloc between eqtlgen and nephqtl2 -------------------------------------------
-# leading SNP: rs1472215
+# leading SNP: rs250735
 # chr pos 5 76732299
 75990144+300000
 75990144-300000
 # f2r_eqtlg_dat_format is from script 05-prepare_instruments_ukb_eqtlgen
 
-f2r_eqtlg_coloc = subset(f2r_eqtlg_dat_format, pos.outcome >= 75690144 & pos.outcome <= 76290144) %>% convert_outcome_to_exposure_local()
+f2r_eqtlg_coloc = subset(f2r_eqtlg_dat_format, pos.outcome >= 75690144 & pos.outcome <= 76290144)
+colnames(f2r_eqtlg_coloc)[grep(".outcome", colnames(f2r_eqtlg_coloc))] <- gsub(".outcome", ".exposure", colnames(f2r_eqtlg_coloc)[grep(".outcome", colnames(f2r_eqtlg_coloc))])
 f2r_eqtlg_coloc$exposure = "F2R (eQTLGen)"
 
 f2r_eqtlg_Glomneph2_merge = merge(f2r_eqtlg_coloc, f2r_Glomneph2_hg3738, by = "SNP")
