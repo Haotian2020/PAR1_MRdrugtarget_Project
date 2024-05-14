@@ -121,4 +121,3 @@ genetracks(loc_f2r_ukb, highlight = "F2R", maxrows = 3, filter_gene_biotype = 'p
            # gene_col = 'grey', exon_col = 'orange', exon_border = 'darkgrey')
 par(oldpar)  # revert par() settings
 dev.off()
-
