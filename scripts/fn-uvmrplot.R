@@ -1,9 +1,10 @@
 # function for lines in the figures --------------------------------------------
 
 generate_lines <- function(line_number) {
+  
   lines <- list()
   
-  for (i in seq_len(line_number)) {
+  for (i in line_number) {
     key <- as.character(i * 1 + 2)
     lines[[key]] <- gpar(lty = 1, lwd = 1, col = "black")
   }
@@ -13,7 +14,7 @@ generate_lines <- function(line_number) {
 
 # function to plot mr results --------------------------------------------------
 
-uvmr_plot <- function(dat, exp, out, line_number, xlabel, x_ticks, intervals, type) {
+uvmr_plot <- function(dat, exp, out, line_number, xlabel, x_ticks, intervals, type, order, make_na) {
   # remove id.exposure and id.outcome columns ----------------------------------
   
   mydata  <- data.frame(dat) %>%
@@ -60,16 +61,16 @@ uvmr_plot <- function(dat, exp, out, line_number, xlabel, x_ticks, intervals, ty
     factor(
       mydata$outcome,
       levels = c(
-        "NS ((Meta-analyzed))",
         "NS (Finngen)",
+        "NS (Meta-analyzed)",
         "eGFR",
         "CKD",
         "uACR",
         "MA",
         "Microalbumin in urine",
         "Albumin",
-        "VTE",
         "AET",
+        "VTE",
         "DVT"
       )
     )
@@ -86,17 +87,37 @@ uvmr_plot <- function(dat, exp, out, line_number, xlabel, x_ticks, intervals, ty
       )
     )
   
+  if(order == "exposure"){
+    sorted_index <- order(mydata$exposure, mydata$outcome, mydata$method)
+  }else if(order == "outcome"){
+    sorted_index <- order(mydata$outcome, mydata$exposure, mydata$method)
+  }else{
+    sorted_index <- order(mydata$method, mydata$exposure, mydata$outcome)
+  }
   
-  sorted_index <- order(mydata$exposure,mydata$outcome,mydata$method)
   mydata = mydata[sorted_index, ]
+  rownames(mydata) <- seq_len(nrow(mydata))
+    
+  # make the table shown with the figure ---------------------------------------
   
-  print(unique(mydata$outcome))
-
+  if(any(is.na(make_na))){
     
-  # make the table shown with the figure -----------------------------------------
-  mydata[-1, "outcome"] <- NA
+    print("no change to dataframe")
+    
+  }else if(length(make_na) == 1){
+    if(make_na %in% c("exposure","outcome")){
+      print(paste0("Leave one variable in column of ", make_na))
+      
+      mydata[-1, make_na] <- NA
+    }
+  }else{
+    print("Delete specific place in datasets")
+    mydata[c(make_na[2:length(make_na)]), make_na[1]] <- NA
+    
+  }
+    
   mydata = data.frame(mydata)
-    
+  print(mydata)
   
   if(type == "conti"){
     
@@ -109,6 +130,10 @@ uvmr_plot <- function(dat, exp, out, line_number, xlabel, x_ticks, intervals, ty
       c("95% CI", as.character(mydata[, 'CI'])),
       c("p-value", as.character(mydata[, 'pvalue']))
     )
+    
+    if(!is.na(line_number)){
+      hl = generate_lines(line_number)
+    }
     
     p <- forestplot(
       tabletext,
@@ -124,7 +149,7 @@ uvmr_plot <- function(dat, exp, out, line_number, xlabel, x_ticks, intervals, ty
         xlab = gpar(cex = 1),
         title = gpar(cex = 1)
       ),
-      hrzl_lines = generate_lines(line_number),
+      hrzl_lines = hl,
       boxsize = 0.15,
       line.margin = 0.1,
       lty.ci = 1,

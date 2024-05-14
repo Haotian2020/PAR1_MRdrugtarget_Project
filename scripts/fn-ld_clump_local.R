@@ -4,7 +4,7 @@ ld_clump_local =  function(out_dat,
                            threshold = 5e-8,
                            r2 = 0.001,
                            ignore_samplesize = F) {
-  if ("pval.outcome" %in% colnames(out_dat)) {
+  if ("pval.outcome" %in% base::colnames(out_dat)) {
     tmp = subset(out_dat, pval.outcome < threshold) %>% TwoSampleMR::convert_outcome_to_exposure()
   } else
   {
@@ -29,13 +29,13 @@ ld_clump_local =  function(out_dat,
       starts_with("pos"),
       starts_with("samplesize")
     ))
-    colnames(ss) = c("SNP",
+    base::colnames(ss) = c("SNP",
                      "chr.exposure",
                      "pos.exposure",
                      "samplesize.exposure")
   } else {
     ss = subset(out_dat, SNP %in% snps$rsid) %>%  dplyr::select(c("SNP", starts_with("chr"), starts_with("pos")))
-    colnames(ss) = c("SNP", "chr.exposure", "pos.exposure")
+    base::colnames(ss) = c("SNP", "chr.exposure", "pos.exposure")
   }
   
   ins = merge(ins, ss, by = "SNP")
