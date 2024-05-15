@@ -41,7 +41,7 @@ df_ns = merge(df_icd10_N04_input,link,by =c("eid"))
 
 # 349 cases
 # 459687 control
-
+459687 + 349
 df_ns = df_ns[,c(3,3,2)]
 colnames(df_ns) = c("FID","IID","ns")
 

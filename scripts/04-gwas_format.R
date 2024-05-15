@@ -215,9 +215,7 @@ f2r_gwas_format = format_data(
   samplesize_col = "N",
   min_pval = 1e-1000,
   chr_col = "CHROM",
-  pos_col = "POS38",
-  log_pval = TRUE
-)
+  pos_col = "POS38")
 
 f2r_gwas_format$outcome = "F2R whole ukb"
 

@@ -137,4 +137,3 @@ gtexbld_Tubeneph2_result <- coloc.analysis.quant(beta1 = df$beta.exposure, beta2
 gtexbld_Tubeneph2_result
 # nsnps    PP.H0.abf  PP.H1.abf    PP.H2.abf  PP.H3.abf PP.H4.abf
 # 1  1882 3.512633e-05 0.03064857 2.009798e-05 0.01658326 0.9527129
-
