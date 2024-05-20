@@ -193,7 +193,7 @@ data.table::fwrite(ma_gwas_format, paste0(rdsf_personal,"./data/format_data/ma_G
 f2r_gwas = data.frame()
 for(i in 1:22){
   print(i)
-  f2r_chr = vroom(paste0(rdsf_shared,"data/UKB-PPP/F2R_P25116_OID20691_v1_Inflammation/discovery_chr",i,"_F2R:P25116:OID20691:v1:Inflammation.gz"))
+  f2r_chr = vroom(paste0(rdsf_personal,"data/F2R_P25116_OID20691_v1_Inflammation/discovery_chr",i,"_F2R:P25116:OID20691:v1:Inflammation.gz"))
   match_chr = vroom(paste0(rdsf_shared,"data/UKB-PPP/snp-rsid-maps/olink_rsid_map_mac5_info03_b0_7_chr",i,"_patched_v2.tsv.gz"))
   f2r_chr_rsid = merge(f2r_chr,match_chr)
   f2r_gwas = rbind(f2r_gwas,f2r_chr_rsid)
