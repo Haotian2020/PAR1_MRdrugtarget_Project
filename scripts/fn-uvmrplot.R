@@ -21,7 +21,7 @@ generate_lines <- function(line_number) {
 
 # function to plot mr results --------------------------------------------------
 
-uvmr_plot <- function(dat, exp, out, line_number, xlabel, x_ticks, intervals, type, order, make_na) {
+uvmr_plot <- function(dat, exp, out, line_number, line_width=1, xlabel, x_ticks, intervals, type, order, make_na) {
   # remove id.exposure and id.outcome columns ----------------------------------
   
   mydata  <- data.frame(dat) %>%
@@ -210,7 +210,6 @@ uvmr_plot <- function(dat, exp, out, line_number, xlabel, x_ticks, intervals, ty
     xlab = xlabel
   )
   
-    
   return(p)
     
 }
