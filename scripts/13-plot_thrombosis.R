@@ -13,10 +13,10 @@ res_pos$outcome[res_pos$outcome == "VTE Finngen R10" ] <- "VTE"
 res_pos$outcome[res_pos$outcome == "AET Finngen R10" ] <- "AET"
 res_pos$outcome[res_pos$outcome == "DVT Finngen R10" ] <- "DVT"
 
-res_pos$exposure[res_pos$exposure == "F2R ukb str"] <- "F2R (UKB-PPP)"
+res_pos$exposure[res_pos$exposure == "F2R ukb str"] <- "PAR1 (UKB-PPP)"
 res_pos$exposure[res_pos$exposure == "F2R eqtl str"] <- "F2R (eQTLGen)"
-res_pos$exposure[res_pos$exposure == "F2R Gtex str"] <- "F2R (GTEx)"
-res_pos$exposure[res_pos$exposure ==  "F2R ukb wk"] <- "F2R (UKB-PPP)"
+res_pos$exposure[res_pos$exposure == "F2R Gtex str"] <- "F2R (GTEx blood)"
+res_pos$exposure[res_pos$exposure ==  "F2R ukb wk"] <- "PAR1 (UKB-PPP)"
 res_pos$exposure[res_pos$exposure ==  "F2R eqtl wk"] <- "F2R (eQTLGen)"
 res_pos$exposure[res_pos$exposure ==  "F2R kidney meta str"] <- "F2R (Susztaklab Kidney)"
 res_pos$exposure[res_pos$exposure ==  "F2R tubule meta str"] <- "F2R (Susztaklab Tubule)"
@@ -29,7 +29,7 @@ data.table::fwrite(res_pos, paste0(rdsf_personal,"./results/par1_pos_res_drugdir
 
 # draw -------------------------------------------------------------------------
 # Options: 
-exp = c("F2R (UKB-PPP)","F2R (eQTLGen)","F2R (GTEx)","F2R (Susztaklab Kidney)", "F2R (Susztaklab Tubule)")
+exp = c("PAR1 (UKB-PPP)","F2R (eQTLGen)","F2R (GTEx blood)","F2R (Susztaklab Kidney)", "F2R (Susztaklab Tubule)")
 
 out = c("VTE","DVT","AET")
 
@@ -37,11 +37,11 @@ p = uvmr_plot(dat = res_pos %>% subset(method %in% c("WR","IVW")),
               exp = exp,
               out = out,
               line_number = c(3,6,9,12),
-              xlabel = "OR (with 95% CI) for each binary outcome per SD unit change in protein level or mRNA level",
-              x_ticks = c(0.5,1.0,1.5),
+              xlabel = expression(OR ~ "(with 95% CI) for SD unit change in thrombotic diseases per SD unit change in lower PAR1 protein or" ~ italic("F2R") ~"expression level"),
+              x_ticks = c(0.5,0.75,1.0,1.25,1.5),
               intervals = c(0.5,1.5),
               type = "binary",
-              order = "outcome",
+              order = "exposure",
               make_na = c("exposure",2,3,5,6,8,9,11,12,14,15))
 
 pdf(paste0(rdsf_personal,"results/all on pos forestplot.pdf"),width = 15, height = 6)
