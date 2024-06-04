@@ -21,7 +21,8 @@ generate_lines <- function(line_number) {
 
 # function to plot mr results --------------------------------------------------
 
-uvmr_plot <- function(dat, exp, out, line_number, line_width=1, xlabel, x_ticks, intervals, type, order, make_na) {
+uvmr_plot <- function(dat, exp, out, line_number, box_size = 0.15, line_width = 1, 
+                      xlabel, x_ticks, intervals, type, order, make_na) {
   # remove id.exposure and id.outcome columns ----------------------------------
   
   mydata  <- data.frame(dat) %>%
@@ -194,7 +195,7 @@ uvmr_plot <- function(dat, exp, out, line_number, line_width=1, xlabel, x_ticks,
       title = gpar(cex = 1)
     ),
     hrzl_lines = if(all(is.na(line_number))) FALSE else generate_lines(line_number),
-    boxsize = 0.15,
+    boxsize = box_size,
     line.margin = 0.1,
     lty.ci = 1,
     col = fpColors(box = "black", lines = "darkgray"),
