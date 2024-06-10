@@ -20,7 +20,7 @@ uvmr <- function(exp_name, out_name){
       
       out_dat <- TwoSampleMR::extract_outcome_data(snps = tmp_exp$SNP, outcomes = each, proxies = T)
       
-    } else if(each %in% c("ns_meta","ns","egfr_sd","ckd","uacr","ma",
+    } else if(each %in% c("ns_meta","ns","egfr_sd","egfr_meta","ckd","uacr","ma",
                           "vte","dvt","aet")){
       
       print(paste0("outcome name is ",each))
