@@ -22,7 +22,7 @@ generate_lines <- function(line_number) {
 # function to plot mr results --------------------------------------------------
 
 uvmr_plot <- function(dat, exp, out, line_number, box_size = 0.15, line_width = 1, 
-                      xlabel, x_ticks, intervals, type, order, make_na) {
+                      xlabel, cex_size=1, x_ticks, intervals, type, order, make_na) {
   # remove id.exposure and id.outcome columns ----------------------------------
   
   mydata  <- data.frame(dat) %>%
@@ -69,12 +69,12 @@ uvmr_plot <- function(dat, exp, out, line_number, box_size = 0.15, line_width = 
     factor(
       mydata$outcome,
       levels = c(
-        "NS (Finngen)",
-        "NS (Meta-analyzed)",
         "eGFR",
         "CKD",
         "uACR",
         "MA",
+        "NS (Finngen)",
+        "NS (Meta-analyzed)",
         "Microalbumin in urine",
         "Albumin",
         "AET",
@@ -189,10 +189,10 @@ uvmr_plot <- function(dat, exp, out, line_number, box_size = 0.15, line_width = 
     new_page = F,
     psignif = 0.05,
     txt_gp = fpTxtGp(
-      label = gpar(cex = 1),
-      ticks = gpar(cex = 1),
-      xlab = gpar(cex = 1),
-      title = gpar(cex = 1)
+      label = gpar(cex = cex_size),
+      ticks = gpar(cex = cex_size),
+      xlab = gpar(cex = cex_size),
+      title = gpar(cex = cex_size)
     ),
     hrzl_lines = if(all(is.na(line_number))) FALSE else generate_lines(line_number),
     boxsize = box_size,
