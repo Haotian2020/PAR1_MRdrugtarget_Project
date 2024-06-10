@@ -75,6 +75,7 @@ data.table::fwrite(ns_meta_format, paste0(rdsf_personal,"./data/format_data/ns_m
 # ensure there is no error during reading data ---------------------------------
 ckd_gwas = fread(paste0(rdsf_personal,"data/CKD_overall_EA_JW_20180223_nstud23.dbgap.txt.gz"))
 egfr_gwas = fread(paste0(rdsf_personal,"data/20171017_MW_eGFR_overall_EA_nstud42.dbgap.txt"))
+egfr_meta_gwas = fread(paste0(rdsf_personal,"data/metal_eGFR_meta_ea1.TBL.map.annot.gc"))
 bun_gwas = fread(paste0(rdsf_personal,"data/BUN_overall_EA_YL_20171108_METAL1_nstud24.dbgap.txt.gz"))
 uacr_gwas = vroom(paste0(rdsf_personal,"data/formatted_20180517-UACR_overall-EA-nstud_18-SumMac_400.tbl.rsid"))
 ma_gwas = vroom(paste0(rdsf_personal,"data/formatted_20180205-MA_overall-ALL-nstud_18-SumMac_400.tbl.rsid"))
@@ -102,7 +103,7 @@ ckd_gwas_format$outcome = "CKD"
 data.table::fwrite(ckd_gwas_format, paste0(rdsf_personal,"./data/format_data/ckd_GWAS_tidy_outcome.csv"))
 
 # egfr sd
-egfr_gwas_outcome_format = format_data(egfr_gwas_outcome,
+egfr_gwas_outcome_format = format_data(egfr_gwas,
                                        type = 'outcome',
                                        snp_col = "RSID",
                                        beta_col = "Effect",
@@ -113,7 +114,7 @@ egfr_gwas_outcome_format = format_data(egfr_gwas_outcome,
                                        pval_col = "P-value",
                                        samplesize_col = "n_total_sum")
 
-egfr_gwas_outcome_format$outcome = 'eGFR'
+egfr_gwas_outcome_format$outcome = "eGFR"
 
 # SD unite transformation
 egfr_sd_gwas_outcome_format = egfr_gwas_outcome_format
