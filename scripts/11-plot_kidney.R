@@ -45,39 +45,20 @@ binary_out = c("CKD","MA","NS (Meta-analyzed)","NS (Finngen)")
 sec_out = c("Albumin")
 
 # main binary ------------------------------------------------------------------
-# NS
+# CKD MA NS
 p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method != "IVW (correlated)"),
               exp = exp,
-              out = c("NS (Meta-analyzed)","NS (Finngen)"),
-              line_number = 1,
-              xlabel = expression(OR ~ "(with 95% CI) for SD unit change in NS per SD unit change in lower PAR1 protein or" ~ italic("F2R") ~"expression level"),
-              x_ticks = c(0.5,0.75,1,1.25,1.5),
-              intervals = c(0.5,1.5),
+              out = binary_out,
+              line_number = c(5,9,10),
+              xlabel = expression(OR ~ "(with 95% CI) for kidney diseases per SD unit change in lower PAR1 protein or" ~ italic("F2R") ~"expression level"),
+              x_ticks = c(0.7,1,1.3,1.6),
+              intervals = c(0.7,1.6),
               type = "binary",
               order = "outcome",
-              make_na = c("outcome",3,4,5))
+              make_na = c("outcome",2,3,4,5,7,8,9,12,13,14))
 
-pdf(paste0(rdsf_personal,"results/F2R on NS forestplot.pdf"), width = 16, height = 3)
+pdf(paste0(rdsf_personal,"results/F2R on kidney binary forestplot.pdf"), width = 15, height = 7)
 plot.new()
-mtext("B)",side = 3,line = 2,adj = -0.05, cex = 1.5,padj = 0)
-print(p)
-dev.off()
-
-# CKD MA
-p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method != "IVW (correlated)"),
-              exp = exp,
-              out = c("CKD", "MA"),
-              line_number = 5,
-              xlabel = expression(OR ~ "(with 95% CI) for SD unit change in CKD or MA per SD unit change in lower PAR1 protein or" ~ italic("F2R") ~"expression level"),
-              x_ticks = c(0.8,1,1.2,1.4),
-              intervals = c(0.8,1.4),
-              type = "binary",
-              order = "outcome",
-              make_na = c("outcome",2,3,4,5,7,8,9))
-
-pdf(paste0(rdsf_personal,"results/F2R on kidney binary forestplot.pdf"), width = 15, height = 5)
-plot.new()
-mtext("A)",side = 3,line = 2,adj = -0.06, cex = 1.5,padj = 0)
 print(p)
 dev.off()
 
@@ -87,7 +68,7 @@ p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method != "IVW (correlate
                 exp = exp,
                 out = conti_out,
                 line_number = 5,
-                xlabel = expression(Beta ~ "(with 95% CI) for SD unit change in log(eGFR) or log(uACR) per SD unit change in lower PAR1 protein or" ~ italic("F2R")~"expression level"),
+                xlabel = expression("Beta (with 95% CI) for SD unit change in log(eGFR) or log(uACR) per SD unit change in lower PAR1 protein or" ~ italic("F2R")~"expression level"),
                 x_ticks = c(-0.075,-0.05,-0.025,0,0.025,0.05,0.075),
                 intervals = c(-0.075,0.075),
                 type = "conti",
@@ -96,7 +77,6 @@ p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method != "IVW (correlate
 
 pdf(paste0(rdsf_personal,"results/F2R on conti forestplot.pdf"),width = 15, height = 6)
 plot.new()
-# mtext("B)",side = 3,line = 2,adj = -0.06, cex = 1.5,padj = 0)
 print(p)
 dev.off()
 
@@ -106,7 +86,7 @@ p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method != "IVW (correlate
               exp = exp,
               out = sec_out,
               line_number = NA,
-              xlabel = expression(Beta ~ "(with 95% CI) for SD unit change in albumin per SD unit change in" ~ italic("F2R")~"expression level"),
+              xlabel = expression("Beta (with 95% CI) for SD unit change in albumin per SD unit change in" ~ italic("F2R")~"expression level"),
               x_ticks = c(-0.1,-0.05,0,0.05,0.1),
               intervals = c(-0.1,0.1),
               type = "conti",
@@ -115,7 +95,6 @@ p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method != "IVW (correlate
 
 pdf(paste0(rdsf_personal,"results/F2R on albumin forestplot.pdf"),width = 15, height = 3)
 plot.new()
-# mtext("B)",side = 3,line = 2,adj = -0.05, cex = 1.5,padj = 0)
 print(p)
 dev.off()
 
@@ -123,35 +102,17 @@ dev.off()
 # binary
 p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method == "IVW (correlated)"),
               exp = exp,
-              out = c("CKD", "MA"),
-              line_number = 2,
-              xlabel = expression(OR ~ "(with 95% CI) for SD unit change in CKD or MA per SD unit change in lower PAR1 protein or" ~ italic("F2R") ~"expression level"),
+              out = c("CKD", "MA","NS (Meta-analyzed)","NS (Finngen)"),
+              line_number = c(2, 3),
+              xlabel = expression(OR ~ "(with 95% CI) for kidney diseases per SD unit change in lower PAR1 protein or" ~ italic("F2R") ~"expression level"),
               x_ticks = c(0.8,1,1.2,1.4),
               intervals = c(0.8,1.4),
               type = "binary",
               order = "outcome",
               make_na = c("outcome",2))
 
-pdf(paste0(rdsf_personal,"results/correlated F2R on kidney binary forestplot.pdf"),width = 15, height = 3)
+pdf(paste0(rdsf_personal,"results/correlated F2R on kidney binary forestplot.pdf"),width = 15, height = 5)
 plot.new()
-mtext("A)",side = 3,line = 2,adj = -0.06, cex = 1.5,padj = 0)
-print(p)
-dev.off()
-
-p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method == "IVW (correlated)"),
-              exp = exp,
-              out = c("NS (Meta-analyzed)","NS (Finngen)"),
-              line_number = NA,
-              xlabel = expression(OR ~ "(with 95% CI) for SD unit change in NS per SD unit change in lower PAR1 protein or" ~ italic("F2R") ~"expression level"),
-              x_ticks = c(0.5,0.75,1,1.25,1.5),
-              intervals = c(0.5,1.5),
-              type = "binary",
-              order = "outcome",
-              make_na = NA)
-
-pdf(paste0(rdsf_personal,"results/correlated F2R on NS forestplot.pdf"),width = 16, height = 2)
-plot.new()
-mtext("B)",side = 3,line = 2,adj = -0.05, cex = 1.5,padj = 0)
 print(p)
 dev.off()
 
@@ -160,7 +121,7 @@ p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method == "IVW (correlate
               exp = exp,
               out = conti_out,
               line_number = 2,
-              xlabel = expression(Beta ~ "(with 95% CI) for SD unit change in log(eGFR) or log(uACR) per SD unit change in lower PAR1 protein or" ~ italic("F2R") ~"expression level"),
+              xlabel = expression("Beta (with 95% CI) for SD unit change in log(eGFR) or log(uACR) per SD unit change in lower PAR1 protein or" ~ italic("F2R") ~"expression level"),
               x_ticks = c(-0.1,-0.05,0,0.05),
               intervals = c(-0.1,0.2),
               type = "conti",
@@ -169,7 +130,6 @@ p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method == "IVW (correlate
 
 pdf(paste0(rdsf_personal,"results/correlated F2R on conti forestplot.pdf"),width = 15, height = 3)
 plot.new()
-# mtext("B)",side = 3,line = 2,adj = -0.06, cex = 1.5,padj = 0)
 print(p)
 dev.off()
 
@@ -179,7 +139,7 @@ p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method == "IVW (correlate
               exp = exp,
               out = c("Albumin"),
               line_number = NA,
-              xlabel = expression(Beta ~ "(with 95% CI) for SD unit change in albumin per SD unit change in lower PAR1 protein or" ~ italic("F2R") ~"expression level"),
+              xlabel = expression("Beta (with 95% CI) for SD unit change in albumin per SD unit change in lower PAR1 protein or" ~ italic("F2R") ~"expression level"),
               x_ticks = c(-0.1,-0.05,0,0.05,0.1),
               intervals = c(-0.1,0.1),
               type = "conti",
@@ -188,6 +148,5 @@ p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method == "IVW (correlate
 
 pdf(paste0(rdsf_personal,"results/correlated F2R on albumin forestplot.pdf"),width = 16, height = 2)
 plot.new()
-# mtext("B)",side = 3,line = 2,adj = -0.05, cex = 1.5,padj = 0)
 print(p)
 dev.off()

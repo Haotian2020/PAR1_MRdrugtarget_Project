@@ -37,7 +37,7 @@ p = uvmr_plot(dat = res_pos %>% subset(method %in% c("WR","IVW")),
               exp = exp,
               out = out,
               line_number = c(3,6,9,12),
-              xlabel = expression(OR ~ "(with 95% CI) for SD unit change in thrombotic diseases per SD unit change in lower PAR1 protein or" ~ italic("F2R") ~"expression level"),
+              xlabel = expression(OR ~ "(with 95% CI) for thrombotic diseases per SD unit change in lower PAR1 protein or" ~ italic("F2R") ~"expression level"),
               x_ticks = c(0.5,0.75,1.0,1.25,1.5),
               intervals = c(0.5,1.5),
               type = "binary",
@@ -53,14 +53,13 @@ p = uvmr_plot(dat = res_pos %>% subset(method == "IVW (correlated)" & exposure %
               exp = exp,
               out = out,
               line_number = 3,
-              xlabel = "OR (with 95% CI) for VTE per SD unit change in protein level or mRNA level",
+              xlabel = "OR (with 95% CI) for thrombotic diseases per SD unit change in protein level or" ~ italic("F2R") ~"expression level",
               x_ticks = c(0.6,0.8,1.0,1.2),
               intervals = c(0.6,1.2),
               type = "binary",
-              order = "outcome",
+              order = "exposure",
               make_na = c("exposure",2,3,5,6))
 pdf(paste0(rdsf_personal,"results/correlated F2R on pos forestplot.pdf"),width = 15, height = 3)
 plot.new()
 print(p)
 dev.off()
-
