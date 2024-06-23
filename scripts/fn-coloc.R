@@ -1,6 +1,6 @@
 # coloc function for quantitative trait ----------------------------------------
 
-coloc.analysis.quant <- function(beta1,beta2,se1,se2,MAF1,MAF2,N1,N2, SNP){
+coloc.analysis.quant <- function(beta1,beta2,se1,se2,MAF1,MAF2,N1,N2,SNP){
   
   #Convert the inputs in order to run in coloc function.
   #type, quant (quantitative) for pQTL study 

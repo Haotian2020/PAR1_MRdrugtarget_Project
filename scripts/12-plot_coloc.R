@@ -7,6 +7,7 @@ library(LDlinkR)
 library(locuszoomr)
 
 source("ld_token.R")
+source("fn-perform_liftover.R")
 
 # F2R location
 # chr5:76716126-76735770
@@ -30,7 +31,7 @@ summary(loc_f2r_ukb)
 loc_f2r_ukb <- link_LD(loc_f2r_ukb, token = link_ld_token)
 summary(loc_f2r_ukb)
 
-# eqtlg data from script 10-coloc ----------------------------------------------
+# eqtlg data from script 08-coloc ----------------------------------------------
 f2r_eqtlg_coloc_snp = f2r_eqtlg_coloc[grep("^rs", f2r_eqtlg_coloc$SNP), ]
 # need liftover for EnsDb.Hsapiens.v86 (hg38)
 colnames(f2r_eqtlg_coloc_snp)[colnames(f2r_eqtlg_coloc_snp) == "chr.exposure"] <- "chrom"
@@ -46,13 +47,13 @@ loc_f2r_eqtlg <- locus(data = f2r_eqtlg_coloc_snp,
                      pos = "pos_b38",
                      p = "pval.exposure",
                      labs = "rsid_b37",
-                     index_snp = "rs250735",
+                     index_snp = "rs1472215",
                      ens_db = "EnsDb.Hsapiens.v86")
 summary(loc_f2r_eqtlg)
 loc_f2r_eqtlg <- link_LD(loc_f2r_eqtlg, token = link_ld_token)
 summary(loc_f2r_eqtlg)
 
-# gtex data from script 10-coloc -----------------------------------------------
+# gtex data from script 08-coloc -----------------------------------------------
 f2r_gtex_coloc_snp = f2r_gtexbld_format[grep("^rs", f2r_gtexbld_format$SNP), ] %>% subset(chr.exposure == 5)
 
 loc_f2r_gtex <- locus(data = f2r_gtex_coloc_snp,

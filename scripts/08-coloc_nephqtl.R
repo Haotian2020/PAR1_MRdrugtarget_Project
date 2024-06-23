@@ -41,7 +41,7 @@ df <- maf_format(f2r_ukb_Glomneph2_merge)
 ukb_Glomneph2_result <- coloc.analysis.quant(beta1 = df$beta.exposure, beta2 = df$beta.outcome, 
                                              se1 = df$se.exposure, se2 = df$se.outcome, 
                                              MAF1 = df$MAF1, MAF2 = df$MAF2, 
-                                             N1 = 33784, N2 = 240, SNP = df$SNP) 
+                                             N1 = 33784, N2 = 240, SNP = df$SNP)
 ukb_Glomneph2_result
 # nsnps    PP.H0.abf PP.H1.abf    PP.H2.abf PP.H3.abf  PP.H4.abf
 # 1  1841 1.528251e-45 0.7646278 3.673479e-46  0.183743 0.05162921
@@ -50,16 +50,17 @@ df <- maf_format(f2r_ukb_Tubeneph2_merge)
 ukb_Tubeneph2_result <- coloc.analysis.quant(beta1 = df$beta.exposure, beta2 = df$beta.outcome, 
                                              se1 = df$se.exposure, se2 = df$se.outcome, 
                                              MAF1 = df$MAF1, MAF2 = df$MAF2, 
-                                             N1 = 33784, N2 = 311, SNP = df$SNP) 
+                                             N1 = 33784, N2 = 311, SNP = df$SNP)
 ukb_Tubeneph2_result
 # nsnps    PP.H0.abf PP.H1.abf    PP.H2.abf PP.H3.abf  PP.H4.abf
 # 1  1812 1.087527e-45 0.5441206 8.415268e-46 0.4210049 0.03487449
 
 # coloc between eqtlgen and nephqtl2 -------------------------------------------
-# leading SNP: rs250733
-# chr pos 5 76732299
+# leading SNP: rs1472215
+# chr pos 5 75990144
 75990144+300000
 75990144-300000
+
 # f2r_eqtlg_dat_format is from script 05-prepare_instruments_ukb_eqtlgen
 
 f2r_eqtlg_coloc = subset(f2r_eqtlg_dat_format, pos.outcome >= 75690144 & pos.outcome <= 76290144)
@@ -88,9 +89,9 @@ eqtlg_Tubeneph2_result <- coloc.analysis.quant(beta1 = df$beta.exposure, beta2 =
                                                MAF1 = df$MAF1, MAF2 = df$MAF2, 
                                                N1 = 31684, N2 = 311, SNP = df$SNP) 
 eqtlg_Tubeneph2_result
-
 # nsnps PP.H0.abf  PP.H1.abf PP.H2.abf  PP.H3.abf PP.H4.abf
 # 1  1812         0 0.06136816         0 0.04766794 0.8909639
+
 
 # coloc between gtex and nephqtl2 ----------------------------------------------
 # leading SNP:rs250753
