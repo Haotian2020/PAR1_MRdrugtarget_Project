@@ -34,7 +34,6 @@ f2r_ukb_wk_exp =  data.frame(f2r_ukb) %>%
 # awk -F' ' '$8 == "ENSG00000164220" { print }' eqtlgen_full_cis_summary_statistics.txt > f2rl2_eqtlgen.txt
 # awk -F' ' '$8 == "ENSG00000127533" { print }' eqtlgen_full_cis_summary_statistics.txt > f2rl3_eqtlgen.txt
 
-
 # Load and format the f2r dataset from eqtlg and  ------------------------------
 
 f2r_eqtlg_dat = fread(file = paste0(rdsf_personal,
