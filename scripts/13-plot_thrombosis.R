@@ -49,6 +49,11 @@ plot.new()
 print(p)
 dev.off()
 
+tiff(paste0(rdsf_personal,"results/all on pos forestplot.tiff"),width = 15, height = 6, res = 300, units = "in")
+plot.new()
+print(p)
+dev.off()
+
 p = uvmr_plot(dat = res_pos %>% subset(method == "IVW (correlated)" & exposure %in% exp),
               exp = exp,
               out = out,
@@ -60,6 +65,11 @@ p = uvmr_plot(dat = res_pos %>% subset(method == "IVW (correlated)" & exposure %
               order = "exposure",
               make_na = c("exposure",2,3,5,6))
 pdf(paste0(rdsf_personal,"results/correlated F2R on pos forestplot.pdf"),width = 15, height = 3)
+plot.new()
+print(p)
+dev.off()
+
+tiff(paste0(rdsf_personal,"results/correlated F2R on pos forestplot.tiff"),width = 15, height = 3, res = 300, units = "in")
 plot.new()
 print(p)
 dev.off()

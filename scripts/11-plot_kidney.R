@@ -62,6 +62,10 @@ plot.new()
 print(p)
 dev.off()
 
+tiff(paste0(rdsf_personal,"results/F2R on kidney binary forestplot.tiff"),width = 15, height = 7, res = 300, units = "in")
+plot.new()
+print(p)
+dev.off()
 # main conti -------------------------------------------------------------------
 
 p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method != "IVW (correlated)"),
@@ -76,6 +80,11 @@ p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method != "IVW (correlate
                 make_na = c("outcome",2,3,4,5,7,8,9,10))
 
 pdf(paste0(rdsf_personal,"results/F2R on conti forestplot.pdf"),width = 15, height = 6)
+plot.new()
+print(p)
+dev.off()
+
+tiff(paste0(rdsf_personal,"results/F2R on conti forestplot.tiff"),width = 15, height = 6, res = 300, units = "in")
 plot.new()
 print(p)
 dev.off()
@@ -98,6 +107,11 @@ plot.new()
 print(p)
 dev.off()
 
+tiff(paste0(rdsf_personal,"results/F2R on albumin forestplot.tiff"),width = 15, height = 3, res = 300, units = "in")
+plot.new()
+print(p)
+dev.off()
+
 # for weakly associated SNP figures --------------------------------------------
 # binary
 p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method == "IVW (correlated)"),
@@ -112,6 +126,11 @@ p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method == "IVW (correlate
               make_na = c("outcome",2))
 
 pdf(paste0(rdsf_personal,"results/correlated F2R on kidney binary forestplot.pdf"),width = 15, height = 5)
+plot.new()
+print(p)
+dev.off()
+
+tiff(paste0(rdsf_personal,"results/correlated F2R on kidney binary forestplot.tiff"),width = 15, height = 3, res = 300, units = "in")
 plot.new()
 print(p)
 dev.off()
@@ -133,6 +152,11 @@ plot.new()
 print(p)
 dev.off()
 
+tiff(paste0(rdsf_personal,"results/correlated F2R on conti forestplot.tiff"),width = 15, height = 3, res = 300, units = "in")
+plot.new()
+print(p)
+dev.off()
+
 # weakly associated on albumin
 
 p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method == "IVW (correlated)"),
@@ -147,6 +171,11 @@ p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method == "IVW (correlate
               make_na = "outcome")
 
 pdf(paste0(rdsf_personal,"results/correlated F2R on albumin forestplot.pdf"),width = 16, height = 2)
+plot.new()
+print(p)
+dev.off()
+
+tiff(paste0(rdsf_personal,"results/correlated F2R on albumin forestplot.tiff"),width = 16, height = 2, res = 300, units = "in")
 plot.new()
 print(p)
 dev.off()

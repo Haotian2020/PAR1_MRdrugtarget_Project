@@ -140,7 +140,7 @@ uvmr_plot <- function(dat, exp, out, line_number, box_size = 0.15, line_width = 
   
   tabletext <- if(type == "conti") {
     cbind(
-      c("Expsoure", as.character(mydata[, 'exposure'])),
+      c("Exposure", as.character(mydata[, 'exposure'])),
       c("Outcome", as.character(mydata[, 'outcome'])),
       c("Approach", as.character(mydata[, 'method'])),
       c('Number of SNPs', as.character(mydata[, 'nsnp'])),
@@ -150,7 +150,7 @@ uvmr_plot <- function(dat, exp, out, line_number, box_size = 0.15, line_width = 
     )
   } else if(type == "binary"){
     cbind(
-      c("Expsoure", as.character(mydata[, 'exposure'])),
+      c("Exposure", as.character(mydata[, 'exposure'])),
       c("Outcome", as.character(mydata[, 'outcome'])),
       c("Approach", as.character(mydata[, 'method'])),
       c('Number of SNPs', as.character(mydata[, 'nsnp'])),
