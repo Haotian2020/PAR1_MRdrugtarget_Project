@@ -1,6 +1,6 @@
 # PAR1_MRdrugtarget_Project
 
-The contents of this repository relate to the manuscript 'Association between genetically proxied PAR-1 inhibition and kidney functions: a drug-target Mendelian Randomization study' by Haotian Tang, Venexia M Walker and Tom R Gaunt.
+The contents of this repository relate to the manuscript 'Genetically-proxied lower PAR1 and renal phenotypes: a drug-target Mendelian Randomization study' by Haotian Tang, Tom R Gaunt and Venexia M Walker.
 
 # Link to the manuscript
 
