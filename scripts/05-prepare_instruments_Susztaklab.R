@@ -63,6 +63,7 @@ f2r_kidney_str_exp = f2r_kiney_meta_format %>%
   filter(chr.outcome == 5 & pos.outcome <=76131595 & pos.outcome>=75911951) %>% 
   ld_clump_local(.,threshold = 5e-8, r2 = 0.001, ignore_samplesize = T) %>% 
   mutate(exposure = "F2R kidney meta str") %>% mutate(samplesize.exposure = 686)
+# if some final instruments are palindromic, we then need to delete them and rerun the clumping
 
 # Susztaklab Tubule-specifc ----------------------------------------------------
 kiney_tube = vroom(paste0(rdsf_personal,"data/par1/Kidney_eQTL.TubsigeQTLsFormated.txt.gz"))
