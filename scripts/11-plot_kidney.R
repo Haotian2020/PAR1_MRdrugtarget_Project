@@ -125,7 +125,7 @@ p = uvmr_plot(dat = res %>% subset(exposure %in% exp & method == "IVW (correlate
               order = "outcome",
               make_na = c("outcome",2))
 
-pdf(paste0(rdsf_personal,"results/correlated F2R on kidney binary forestplot.pdf"),width = 15, height = 5)
+pdf(paste0(rdsf_personal,"results/correlated F2R on kidney binary forestplot.pdf"),width = 15, height = 4)
 plot.new()
 print(p)
 dev.off()
