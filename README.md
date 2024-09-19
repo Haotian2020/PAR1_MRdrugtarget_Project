@@ -4,7 +4,7 @@ The contents of this repository relate to the manuscript 'Genetically-proxied lo
 
 # Link to the manuscript
 
-Will copy it here once we submit to arxiv
+[Preprint](https://www.medrxiv.org/content/10.1101/2024.08.08.24311690v1)
 
 # Abstract
 
