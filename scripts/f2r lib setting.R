@@ -4,7 +4,7 @@ getwd()
 
 # install.packages("remotes")
 library(remotes)
-
+library(data.table)
 # remotes::install_github("MRCIEU/TwoSampleMR",force = T)
 library(TwoSampleMR)
 
